@@ -1,7 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Search, Bell, User, Maximize, Menu, Minimize, Edit2, Check } from 'lucide-react';
+import { Search, Bell, User, Maximize, Menu, Minimize, Edit2, Check, MapPin } from 'lucide-react';
 
-const Header = ({ toggleSidebar, searchQuery, setSearchQuery, userName, setUserName }) => {
+const Header = ({ 
+  toggleSidebar, 
+  searchQuery, setSearchQuery, 
+  userName, setUserName, 
+  activeLocationFilter, setActiveLocationFilter 
+}) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
@@ -10,6 +15,23 @@ const Header = ({ toggleSidebar, searchQuery, setSearchQuery, userName, setUserN
   
   const notifRef = useRef(null);
   const profileRef = useRef(null);
+
+  const locations = [
+    'All Locations',
+    'Premix (Micocheni + Taifa)',
+    'Impala',
+    'Lugoba',
+    'Container Depot (AFICD)',
+    'AILL 1 & 2 / Polytra',
+    'Fuel Depot and Yard',
+    'Lake Steel',
+    'Pipe and Cylinder',
+    'Lake Aviation',
+    'Lake Trans',
+    'Building Solution',
+    'Kings Apartment and Offices',
+    'Lake Pipe Showroom and Retail'
+  ];
 
   useEffect(() => {
     const handleFullscreenChange = () => {
@@ -60,7 +82,7 @@ const Header = ({ toggleSidebar, searchQuery, setSearchQuery, userName, setUserN
           <Search size={18} color="var(--text-secondary)" />
           <input 
             type="text" 
-            placeholder="Search analytics, locations..." 
+            placeholder="Search analytics..." 
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -68,6 +90,20 @@ const Header = ({ toggleSidebar, searchQuery, setSearchQuery, userName, setUserN
       </div>
       
       <div className="header-actions">
+        {/* Location Filter */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <MapPin size={18} color="var(--accent-blue)" />
+          <select 
+            className="location-dropdown"
+            value={activeLocationFilter}
+            onChange={(e) => setActiveLocationFilter(e.target.value)}
+          >
+            {locations.map(loc => (
+              <option key={loc} value={loc}>{loc}</option>
+            ))}
+          </select>
+        </div>
+
         <button className="icon-btn" onClick={toggleFullscreen} title="Toggle Fullscreen">
           {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
         </button>
@@ -81,8 +117,7 @@ const Header = ({ toggleSidebar, searchQuery, setSearchQuery, userName, setUserN
           {showNotifications && (
             <div className="dropdown-menu" style={{ 
               position: 'absolute', top: '100%', right: 0, marginTop: '16px', 
-              width: '300px', background: 'var(--sidebar-bg)', border: '1px solid var(--card-border)',
-              borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.5)', zIndex: 100, overflow: 'hidden'
+              width: '300px', borderRadius: '12px', zIndex: 100, overflow: 'hidden'
             }}>
               <div style={{ padding: '16px', borderBottom: '1px solid var(--card-border)', fontWeight: '600' }}>
                 Notifications
@@ -103,7 +138,7 @@ const Header = ({ toggleSidebar, searchQuery, setSearchQuery, userName, setUserN
                   </div>
                 </div>
                 <div style={{ padding: '12px 16px', display: 'flex', gap: '12px' }}>
-                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-color)', marginTop: '6px' }}></div>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--accent-blue)', marginTop: '6px' }}></div>
                   <div>
                     <div style={{ fontSize: '0.875rem', color: 'var(--text-primary)' }}>System Update Complete</div>
                     <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>1 hr ago</div>
@@ -121,15 +156,14 @@ const Header = ({ toggleSidebar, searchQuery, setSearchQuery, userName, setUserN
               <span className="user-role">System Admin</span>
             </div>
             <div className="avatar">
-              <User size={20} color="white" />
+              {userName.charAt(0)}
             </div>
           </div>
           
           {showProfile && (
             <div className="dropdown-menu" style={{ 
               position: 'absolute', top: '100%', right: 0, marginTop: '16px', 
-              width: '260px', background: 'var(--sidebar-bg)', border: '1px solid var(--card-border)',
-              borderRadius: '12px', boxShadow: '0 10px 25px rgba(0,0,0,0.5)', zIndex: 100, padding: '16px'
+              width: '260px', borderRadius: '12px', zIndex: 100, padding: '16px'
             }}>
               {isEditingName ? (
                 <div>
@@ -139,7 +173,7 @@ const Header = ({ toggleSidebar, searchQuery, setSearchQuery, userName, setUserN
                       type="text" 
                       value={tempName}
                       onChange={(e) => setTempName(e.target.value)}
-                      style={{ flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid var(--card-border)', background: 'rgba(0,0,0,0.2)', color: 'white' }}
+                      style={{ flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid var(--card-border)', background: '#f8fafc', color: 'var(--text-primary)' }}
                       autoFocus
                     />
                     <button onClick={handleNameSave} style={{ background: 'var(--success)', color: 'white', border: 'none', borderRadius: '6px', width: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
@@ -154,9 +188,9 @@ const Header = ({ toggleSidebar, searchQuery, setSearchQuery, userName, setUserN
                   
                   <button 
                     onClick={() => { setIsEditingName(true); setTempName(userName); }}
-                    style={{ width: '100%', padding: '8px 12px', background: 'rgba(255,255,255,0.05)', border: '1px solid var(--card-border)', borderRadius: '6px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', transition: 'background 0.2s' }}
-                    onMouseOver={(e) => e.target.style.background = 'rgba(255,255,255,0.1)'}
-                    onMouseOut={(e) => e.target.style.background = 'rgba(255,255,255,0.05)'}
+                    style={{ width: '100%', padding: '8px 12px', background: '#f8fafc', border: '1px solid var(--card-border)', borderRadius: '6px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', transition: 'background 0.2s' }}
+                    onMouseOver={(e) => e.target.style.background = '#f1f5f9'}
+                    onMouseOut={(e) => e.target.style.background = '#f8fafc'}
                   >
                     <Edit2 size={16} /> Change Profile Name
                   </button>

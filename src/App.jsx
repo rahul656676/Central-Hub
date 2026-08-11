@@ -1,23 +1,26 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './components/Sidebar';
 import Header from './components/Header';
 import Dashboard from './components/Dashboard';
+import './App.css';
+import './index.css';
 
 function App() {
-  const [activeLocation, setActiveLocation] = useState('All Locations');
+  const [activeSolution, setActiveSolution] = useState('Overview');
+  const [activeLocationFilter, setActiveLocationFilter] = useState('All Locations');
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
   const [searchQuery, setSearchQuery] = useState('');
   const [userName, setUserName] = useState('Rahul Jangir');
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth > 768) {
-        setIsSidebarOpen(true);
-      } else {
+      if (window.innerWidth <= 768) {
         setIsSidebarOpen(false);
+      } else {
+        setIsSidebarOpen(true);
       }
     };
-    
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -29,15 +32,13 @@ function App() {
   return (
     <div className="app-container">
       <Sidebar 
-        activeLocation={activeLocation} 
-        setActiveLocation={setActiveLocation} 
-        isOpen={isSidebarOpen}
-        setIsOpen={setIsSidebarOpen}
+        isOpen={isSidebarOpen} 
+        activeSolution={activeSolution} 
+        setActiveSolution={setActiveSolution} 
       />
       
-      {/* Overlay for mobile when sidebar is open */}
       {isSidebarOpen && window.innerWidth <= 768 && (
-        <div className="sidebar-overlay" onClick={() => setIsSidebarOpen(false)}></div>
+        <div className="sidebar-overlay" onClick={toggleSidebar}></div>
       )}
       
       <main className="main-content">
@@ -47,9 +48,12 @@ function App() {
           setSearchQuery={setSearchQuery} 
           userName={userName}
           setUserName={setUserName}
+          activeLocationFilter={activeLocationFilter}
+          setActiveLocationFilter={setActiveLocationFilter}
         />
         <Dashboard 
-          activeLocation={activeLocation} 
+          activeSolution={activeSolution} 
+          activeLocationFilter={activeLocationFilter}
           searchQuery={searchQuery} 
           userName={userName}
         />

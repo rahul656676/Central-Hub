@@ -1,8 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Calendar, AlertTriangle, CheckCircle, ShieldAlert, Sliders } from 'lucide-react';
 import { 
-  HardHat, CarFront, Package, UserX, Droplets, Flame, Activity, ShieldAlert,
-  Calendar, Settings, BarChart3, Truck, Sliders, BellDot, FileText
-} from 'lucide-react';
+  LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, 
+  XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
+} from 'recharts';
 
 // Simple deterministic hash for consistent random numbers per location
 const hashCode = (str) => {
@@ -15,37 +16,52 @@ const hashCode = (str) => {
   return Math.abs(hash);
 };
 
-// Sub-component for Configuration View
+// Colors for Recharts
+const COLORS = ['#2563eb', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#0891b2'];
+
+const CustomTooltip = ({ active, payload, label }) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="custom-tooltip">
+        <p className="custom-tooltip-label">{label}</p>
+        {payload.map((entry, index) => (
+          <p key={index} className="custom-tooltip-value" style={{ color: entry.color }}>
+            {entry.name}: <span style={{ fontWeight: 600 }}>{entry.value}</span>
+          </p>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
+
+// ---------------------------------------------------------
+// Sub-components for System Management Views (Kept from before but light-themed)
+// ---------------------------------------------------------
 const ConfigurationView = () => {
   const [activeTab, setActiveTab] = useState('General');
-
   return (
-    <div className="card" style={{ padding: '0', overflow: 'hidden' }}>
-      <div style={{ padding: '32px', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <Sliders size={32} color="var(--accent-color)" />
+    <div className="card full-width-card" style={{ padding: '0', overflow: 'hidden' }}>
+      <div style={{ padding: '24px', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: '16px' }}>
+        <Sliders size={28} color="var(--accent-blue)" />
         <div>
-          <h2 style={{ margin: 0 }}>System Configuration</h2>
+          <h2 style={{ margin: 0, color: 'var(--text-primary)' }}>System Configuration</h2>
           <p style={{ color: 'var(--text-secondary)', margin: '4px 0 0 0', fontSize: '0.875rem' }}>
             Adjust global settings, manage user access, and configure API integrations.
           </p>
         </div>
       </div>
       
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--card-border)' }}>
+      <div style={{ display: 'flex', borderBottom: '1px solid var(--card-border)', background: '#f8fafc' }}>
         {['General', 'User Roles', 'Camera Feeds'].map(tab => (
           <button 
             key={tab}
             onClick={() => setActiveTab(tab)}
             style={{ 
-              flex: 1, 
-              padding: '16px', 
-              background: activeTab === tab ? 'rgba(14, 165, 233, 0.1)' : 'transparent',
-              border: 'none',
-              borderBottom: activeTab === tab ? '2px solid var(--accent-color)' : '2px solid transparent',
-              color: activeTab === tab ? 'var(--accent-color)' : 'var(--text-secondary)',
-              cursor: 'pointer',
-              fontWeight: activeTab === tab ? '600' : '400',
-              transition: 'all 0.2s'
+              flex: 1, padding: '16px', background: activeTab === tab ? '#ffffff' : 'transparent',
+              border: 'none', borderBottom: activeTab === tab ? '2px solid var(--accent-blue)' : '2px solid transparent',
+              color: activeTab === tab ? 'var(--accent-blue)' : 'var(--text-secondary)',
+              cursor: 'pointer', fontWeight: activeTab === tab ? '600' : '400', transition: 'all 0.2s'
             }}
           >
             {tab}
@@ -53,256 +69,257 @@ const ConfigurationView = () => {
         ))}
       </div>
 
-      <div style={{ padding: '32px', minHeight: '300px' }}>
+      <div style={{ padding: '32px', minHeight: '300px', background: '#ffffff' }}>
         {activeTab === 'General' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', textAlign: 'left' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', textAlign: 'left', maxWidth: '600px' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>System Name</label>
-              <input type="text" defaultValue="Lake Group Central Hub" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)', background: 'rgba(0,0,0,0.2)', color: 'white' }} />
-            </div>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
-              <div>
-                <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Timezone</label>
-                <select style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)', background: 'rgba(0,0,0,0.2)', color: 'white' }}>
-                  <option>East Africa Time (EAT)</option>
-                  <option>Central Africa Time (CAT)</option>
-                  <option>UTC</option>
-                </select>
-              </div>
-              <div>
-                <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Data Retention (Days)</label>
-                <input type="number" defaultValue="90" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)', background: 'rgba(0,0,0,0.2)', color: 'white' }} />
-              </div>
+              <input type="text" defaultValue="Lake Group Central Hub" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)' }} />
             </div>
             <div>
-              <button style={{ padding: '10px 24px', background: 'var(--accent-color)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>Save Changes</button>
+              <button style={{ padding: '10px 24px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>Save Changes</button>
             </div>
           </div>
         )}
-
         {activeTab === 'User Roles' && (
-          <div style={{ textAlign: 'left' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
-              <h3 style={{ margin: 0, fontSize: '1rem' }}>Active Users</h3>
-              <button style={{ background: 'transparent', border: '1px solid var(--accent-color)', color: 'var(--accent-color)', padding: '4px 12px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem' }}>+ Add User</button>
-            </div>
-            <div style={{ border: '1px solid var(--card-border)', borderRadius: '8px', overflow: 'hidden' }}>
-              <div className="metric" style={{ padding: '12px 16px', background: 'rgba(255,255,255,0.05)', fontWeight: 'bold' }}>
-                <div style={{ flex: 2 }}>Name</div>
-                <div style={{ flex: 1 }}>Role</div>
-                <div style={{ flex: 1, textAlign: 'right' }}>Status</div>
-              </div>
-              <div className="metric" style={{ padding: '12px 16px' }}>
-                <div style={{ flex: 2 }}>{userName}</div>
-                <div style={{ flex: 1, color: 'var(--text-secondary)' }}>System Admin</div>
-                <div style={{ flex: 1, textAlign: 'right', color: 'var(--success)' }}>Active</div>
-              </div>
-              <div className="metric" style={{ padding: '12px 16px' }}>
-                <div style={{ flex: 2 }}>Security Manager</div>
-                <div style={{ flex: 1, color: 'var(--text-secondary)' }}>Manager</div>
-                <div style={{ flex: 1, textAlign: 'right', color: 'var(--success)' }}>Active</div>
-              </div>
-            </div>
-          </div>
+          <div style={{ color: 'var(--text-secondary)' }}>User roles management interface.</div>
         )}
-
         {activeTab === 'Camera Feeds' && (
-          <div style={{ textAlign: 'left' }}>
-             <p style={{ color: 'var(--text-secondary)', marginBottom: '24px' }}>Integration endpoints for AI CCTV processing.</p>
-             <div style={{ display: 'grid', gap: '16px' }}>
-               <div style={{ padding: '16px', border: '1px solid var(--card-border)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                 <div>
-                   <div style={{ fontWeight: '500' }}>Premix - Gate A (ANPR)</div>
-                   <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>rtsp://192.168.1.101:554/stream1</div>
-                 </div>
-                 <div style={{ padding: '4px 8px', background: 'rgba(16,185,129,0.1)', color: 'var(--success)', borderRadius: '4px', fontSize: '0.75rem' }}>Connected</div>
-               </div>
-               <div style={{ padding: '16px', border: '1px solid var(--card-border)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                 <div>
-                   <div style={{ fontWeight: '500' }}>Impala - Loading Bay (Spillage)</div>
-                   <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '4px' }}>rtsp://192.168.1.105:554/stream1</div>
-                 </div>
-                 <div style={{ padding: '4px 8px', background: 'rgba(16,185,129,0.1)', color: 'var(--success)', borderRadius: '4px', fontSize: '0.75rem' }}>Connected</div>
-               </div>
-             </div>
-          </div>
+          <div style={{ color: 'var(--text-secondary)' }}>RTSP stream configuration interface.</div>
         )}
       </div>
     </div>
   );
 };
 
-const Dashboard = ({ activeLocation, searchQuery = '', userName = 'Rahul Jangir' }) => {
+// ---------------------------------------------------------
+// Main Dashboard Component
+// ---------------------------------------------------------
+const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery }) => {
   const [currentDate, setCurrentDate] = useState('');
 
   useEffect(() => {
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' };
-    setCurrentDate(new Date().toLocaleDateString('en-US', options));
-    
-    const timer = setInterval(() => {
-      setCurrentDate(new Date().toLocaleDateString('en-US', options));
-    }, 60000);
-    
-    return () => clearInterval(timer);
+    const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    setCurrentDate(new Date().toLocaleDateString('en-US', dateOptions));
   }, []);
 
-  // Generate varied dummy data based on the active location
-  const dummyData = useMemo(() => {
-    const seed = hashCode(activeLocation);
-    const mod = (val, max, min = 0) => ((seed * val) % max) + min;
+  // Use the location filter to generate a deterministic random multiplier (0.8 to 1.5)
+  const locHash = hashCode(activeLocationFilter);
+  const m = activeLocationFilter === 'All Locations' ? 1 : 0.8 + (locHash % 70) / 100;
 
-    return [
-      {
-        id: 'ppe', title: 'PPE Monitoring', desc: 'Detect helmets, vests, and gloves.',
-        icon: <HardHat size={24} />, iconClass: 'icon-ppe', status: mod(1, 10) > 8 ? 'Alert' : 'Safe',
-        statusClass: mod(1, 10) > 8 ? 'alert' : 'safe',
-        metrics: [
-          { label: 'Compliance Rate', value: `${90 + mod(2, 9)}.${mod(3, 9)}%` },
-          { label: 'Active Personnel', value: activeLocation === 'All Locations' ? '1,420' : `${20 + mod(4, 150)}` },
-          { label: 'Recent Violations', value: `${mod(5, 5)}`, alert: mod(5, 5) > 2 }
-        ]
-      },
-      {
-        id: 'anpr', title: 'ANPR & Container Tracking', desc: 'Track vehicle plates and logistics containers.',
-        icon: <CarFront size={24} />, iconClass: 'icon-anpr', status: 'Active', statusClass: 'safe',
-        metrics: [
-          { label: 'Vehicles Processed', value: activeLocation === 'All Locations' ? '3,480' : `${50 + mod(6, 400)}` },
-          { label: 'Containers Tracked', value: activeLocation === 'All Locations' ? '12,040' : `${100 + mod(7, 1000)}` },
-          { label: 'Unauthorized', value: `${mod(8, 3)}`, alert: mod(8, 3) > 0 }
-        ]
-      },
-      {
-        id: 'counting', title: 'Box / Sack / Bottle Counting', desc: 'Automated production and dispatch counting.',
-        icon: <Package size={24} />, iconClass: 'icon-counting', status: 'Active', statusClass: 'safe',
-        metrics: [
-          { label: 'Daily Output', value: activeLocation === 'All Locations' ? '124,500' : `${1000 + mod(9, 20000)}` },
-          { label: 'Accuracy', value: `${98 + mod(10, 2)}.${mod(11, 9)}%` },
-          { label: 'Current Rate', value: `${100 + mod(12, 500)}/hr` }
-        ]
-      },
-      {
-        id: 'loitering', title: 'Loitering Detection', desc: 'Identify prolonged presence in sensitive areas.',
-        icon: <UserX size={24} />, iconClass: 'icon-loitering', status: mod(13, 10) > 6 ? 'Alert' : 'Safe',
-        statusClass: mod(13, 10) > 6 ? 'alert' : 'safe',
-        metrics: [
-          { label: 'Active Alerts', value: `${mod(14, 4)}`, alert: mod(14, 4) > 0 },
-          { label: 'Zone', value: `Gate ${1 + mod(15, 6)}` },
-          { label: 'Duration', value: `${mod(16, 20)} mins` }
-        ]
-      },
-      {
-        id: 'spill', title: 'Spillage Detection', desc: 'Detect oil, chemical, or material spills instantly.',
-        icon: <Droplets size={24} />, iconClass: 'icon-spill', status: mod(17, 10) > 7 ? 'Warning' : 'Safe',
-        statusClass: mod(17, 10) > 7 ? 'warning' : 'safe',
-        metrics: [
-          { label: 'Minor Spills', value: `${mod(18, 3)}` },
-          { label: 'Location', value: `Sector ${String.fromCharCode(65 + mod(19, 5))}` },
-          { label: 'Status', value: mod(18, 3) > 0 ? 'Containing' : 'Clear' }
-        ]
-      },
-      {
-        id: 'fire', title: 'Fire & Smoke Detection', desc: 'Early detection system for rapid response.',
-        icon: <Flame size={24} />, iconClass: 'icon-fire', status: 'Safe', statusClass: 'safe',
-        metrics: [
-          { label: 'Sensors Active', value: `${10 + mod(20, 40)}/${10 + mod(20, 40)}` },
-          { label: 'Temperatures', value: 'Normal' },
-          { label: 'Last Test', value: `${1 + mod(21, 23)} hrs ago` }
-        ]
-      },
-      {
-        id: 'productivity', title: 'Productivity Tracking', desc: 'Analyze employee movement and task engagement.',
-        icon: <Activity size={24} />, iconClass: 'icon-productivity', status: 'Active', statusClass: 'safe',
-        metrics: [
-          { label: 'Overall Efficiency', value: `${75 + mod(22, 20)}%` },
-          { label: 'Idle Time', value: `${5 + mod(23, 15)}%` },
-          { label: 'Active Zones', value: `${2 + mod(24, 8)}` }
-        ]
-      },
-      {
-        id: 'intrusion', title: 'Advanced Intrusion Alerts', desc: 'Detection of perimeter breaches in real time.',
-        icon: <ShieldAlert size={24} />, iconClass: 'icon-intrusion', status: mod(25, 10) > 8 ? 'Alert' : 'Safe',
-        statusClass: mod(25, 10) > 8 ? 'alert' : 'safe',
-        metrics: [
-          { label: 'Perimeter Status', value: mod(25, 10) > 8 ? 'Breach Detected' : 'Secure' },
-          { label: 'Cameras Online', value: `${20 + mod(26, 30)}/${20 + mod(26, 30)}` },
-          { label: 'Recent Breaches', value: mod(25, 10) > 8 ? '1' : '0' }
-        ]
-      }
-    ];
-  }, [activeLocation]);
+  // Render System Management views if selected
+  const isSystemView = ['Configuration', 'Alert Rules', 'Reports', 'Fleet Admin'].includes(activeSolution);
+  if (isSystemView) {
+    return (
+      <div className="dashboard-area">
+        <div className="page-header">
+          <div>
+            <h1>{activeSolution}</h1>
+            <p>System Management Panel</p>
+          </div>
+        </div>
+        <div className="dashboard-grid">
+          {activeSolution === 'Configuration' && <ConfigurationView />}
+          {activeSolution !== 'Configuration' && (
+            <div className="card full-width-card" style={{ textAlign: 'center', padding: '60px' }}>
+              <h2 style={{ color: 'var(--text-secondary)' }}>{activeSolution} View</h2>
+              <p style={{ color: 'var(--text-muted)' }}>Advanced configuration module goes here.</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
-  // System Management Views
-  const renderSystemView = () => {
-    switch (activeLocation) {
-      case 'Configuration':
-        return <ConfigurationView />;
-      case 'Alert Rules':
+  // ---------------------------------------------------------
+  // Solution-Specific Data Generation (Mutated by Location multiplier 'm')
+  // ---------------------------------------------------------
+  
+  const renderSolutionView = () => {
+    switch (activeSolution) {
+      case 'Overview':
+        const trendData = [
+          { name: 'Mon', alerts: Math.floor(120 * m), processed: Math.floor(4000 * m) },
+          { name: 'Tue', alerts: Math.floor(150 * m), processed: Math.floor(3000 * m) },
+          { name: 'Wed', alerts: Math.floor(90 * m), processed: Math.floor(5000 * m) },
+          { name: 'Thu', alerts: Math.floor(200 * m), processed: Math.floor(4500 * m) },
+          { name: 'Fri', alerts: Math.floor(180 * m), processed: Math.floor(4800 * m) },
+          { name: 'Sat', alerts: Math.floor(80 * m), processed: Math.floor(2000 * m) },
+          { name: 'Sun', alerts: Math.floor(60 * m), processed: Math.floor(1500 * m) },
+        ];
+        
         return (
-          <div className="card" style={{ padding: '40px', textAlign: 'center' }}>
-            <BellDot size={48} color="var(--warning)" style={{ margin: '0 auto 20px' }} />
-            <h2>Alert Thresholds & Rules</h2>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '10px' }}>
-              Define when alerts are triggered for PPE violations, intrusions, and loitering.
-            </p>
-            <div style={{ marginTop: '30px', background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px', textAlign: 'left' }}>
-              <div className="metric"><span className="metric-label">Loitering Threshold</span> <span className="metric-value highlight">10 Minutes</span></div>
-              <div className="metric"><span className="metric-label">PPE Hardhat Requirement</span> <span className="metric-value highlight">Strict</span></div>
-              <div className="metric"><span className="metric-label">Spillage Sensitivity</span> <span className="metric-value highlight">High</span></div>
-            </div>
-          </div>
-        );
-      case 'Reports':
-        return (
-          <div className="card" style={{ padding: '40px', textAlign: 'center' }}>
-            <FileText size={48} color="var(--success)" style={{ margin: '0 auto 20px' }} />
-            <h2>Analytics & Reports</h2>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '10px' }}>
-              Generate custom PDF and Excel reports for site productivity and safety compliance.
-            </p>
-            <div style={{ marginTop: '30px', display: 'flex', gap: '20px', justifyContent: 'center' }}>
-              <button className="nav-item active" style={{ border: 'none', background: 'var(--success)', color: '#fff' }}>Download Weekly Summary</button>
-              <button className="nav-item" style={{ border: '1px solid var(--card-border)' }}>View Audit Logs</button>
-            </div>
-          </div>
-        );
-      case 'Fleet Admin':
-        return (
-          <div className="card" style={{ padding: '40px', textAlign: 'center' }}>
-            <Truck size={48} color="#8b5cf6" style={{ margin: '0 auto 20px' }} />
-            <h2>Fleet & Logistics Administration</h2>
-            <p style={{ color: 'var(--text-secondary)', marginTop: '10px' }}>
-              Manage registered vehicle plates, container manifests, and trusted driver profiles.
-            </p>
-            <div style={{ marginTop: '30px', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', textAlign: 'left' }}>
-              <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px' }}>
-                <h4>Registered Vehicles</h4>
-                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--accent-color)' }}>842</div>
+          <>
+            <div className="card one-third-card">
+              <div className="card-title-group">
+                <div className="card-icon" style={{ background: '#e0f2fe', color: '#0ea5e9' }}><CheckCircle size={20} /></div>
+                <div><div className="card-title">System Status</div><div className="card-desc">Overall health</div></div>
               </div>
-              <div style={{ background: 'rgba(255,255,255,0.05)', borderRadius: '12px', padding: '20px' }}>
-                <h4>Active Containers</h4>
-                <div style={{ fontSize: '2rem', fontWeight: 'bold', color: 'var(--accent-color)' }}>1,105</div>
+              <div className="metric-value success">Operational</div>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '8px' }}>99.98% Uptime across {activeLocationFilter}</p>
+            </div>
+            
+            <div className="card one-third-card">
+              <div className="card-title-group">
+                <div className="card-icon" style={{ background: '#fee2e2', color: '#ef4444' }}><AlertTriangle size={20} /></div>
+                <div><div className="card-title">Total Alerts Today</div><div className="card-desc">Needs attention</div></div>
+              </div>
+              <div className="metric-value danger">{Math.floor(142 * m)}</div>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '8px' }}>+12% from yesterday</p>
+            </div>
+            
+            <div className="card one-third-card">
+              <div className="card-title-group">
+                <div className="card-icon" style={{ background: '#ede9fe', color: '#8b5cf6' }}><Sliders size={20} /></div>
+                <div><div className="card-title">Active AI Modules</div><div className="card-desc">Currently running</div></div>
+              </div>
+              <div className="metric-value accent">8 / 8</div>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '8px' }}>All edge nodes connected</p>
+            </div>
+            
+            <div className="card full-width-card">
+              <h3 style={{ marginBottom: '20px', color: 'var(--text-primary)' }}>Weekly Alert vs Processing Trend</h3>
+              <div className="chart-container">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={trendData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                    <defs>
+                      <linearGradient id="colorAlerts" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
+                      </linearGradient>
+                      <linearGradient id="colorProcessed" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                    <XAxis dataKey="name" stroke="#94a3b8" />
+                    <YAxis stroke="#94a3b8" />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend />
+                    <Area type="monotone" dataKey="processed" name="Total Events Processed" stroke="#3b82f6" fillOpacity={1} fill="url(#colorProcessed)" />
+                    <Area type="monotone" dataKey="alerts" name="Alerts Triggered" stroke="#ef4444" fillOpacity={1} fill="url(#colorAlerts)" />
+                  </AreaChart>
+                </ResponsiveContainer>
               </div>
             </div>
+          </>
+        );
+        
+      case 'PPE Monitoring':
+        const ppeData = [
+          { name: 'No Helmet', value: Math.floor(45 * m) },
+          { name: 'No Vest', value: Math.floor(82 * m) },
+          { name: 'No Gloves', value: Math.floor(21 * m) },
+          { name: 'No Boots', value: Math.floor(12 * m) },
+        ];
+        
+        return (
+          <>
+            <div className="card full-width-card" style={{ display: 'flex', flexDirection: 'row', gap: '24px' }}>
+              <div style={{ flex: 1 }}>
+                <h3 style={{ marginBottom: '20px', color: 'var(--text-primary)' }}>Compliance Metrics</h3>
+                <div className="metric-grid">
+                  <div className="metric-box">
+                    <div className="metric-label">Overall Compliance</div>
+                    <div className="metric-value accent">{(92.4 + (m%2)).toFixed(1)}%</div>
+                  </div>
+                  <div className="metric-box">
+                    <div className="metric-label">Total Violations</div>
+                    <div className="metric-value danger">{Math.floor(160 * m)}</div>
+                  </div>
+                  <div className="metric-box">
+                    <div className="metric-label">Workers Scanned</div>
+                    <div className="metric-value">{Math.floor(2140 * m)}</div>
+                  </div>
+                </div>
+              </div>
+              <div style={{ flex: 1, borderLeft: '1px solid var(--card-border)', paddingLeft: '24px' }}>
+                <h3 style={{ marginBottom: '10px', color: 'var(--text-primary)' }}>Violation Breakdown</h3>
+                <div style={{ height: '200px' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <PieChart>
+                      <Pie data={ppeData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
+                        {ppeData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                      </Pie>
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                    </PieChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            </div>
+          </>
+        );
+
+      case 'ANPR & Containers':
+        const anprData = [
+          { time: '08:00', vehicles: Math.floor(40*m), containers: Math.floor(35*m) },
+          { time: '10:00', vehicles: Math.floor(85*m), containers: Math.floor(80*m) },
+          { time: '12:00', vehicles: Math.floor(120*m), containers: Math.floor(110*m) },
+          { time: '14:00', vehicles: Math.floor(150*m), containers: Math.floor(145*m) },
+          { time: '16:00', vehicles: Math.floor(90*m), containers: Math.floor(85*m) },
+          { time: '18:00', vehicles: Math.floor(30*m), containers: Math.floor(25*m) },
+        ];
+        
+        return (
+          <div className="card full-width-card">
+            <h3 style={{ marginBottom: '20px' }}>Vehicle & Container Throughput (Today)</h3>
+            <div className="metric-grid">
+              <div className="metric-box"><div className="metric-label">Plates Scanned</div><div className="metric-value accent">{Math.floor(515 * m)}</div></div>
+              <div className="metric-box"><div className="metric-label">Containers Matched</div><div className="metric-value success">{Math.floor(480 * m)}</div></div>
+              <div className="metric-box"><div className="metric-label">Mismatches/Errors</div><div className="metric-value danger">{Math.floor(12 * m)}</div></div>
+            </div>
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={anprData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="time" stroke="#94a3b8" />
+                  <YAxis stroke="#94a3b8" />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend />
+                  <Bar dataKey="vehicles" name="Vehicles Processed" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="containers" name="Containers Tracked" fill="#10b981" radius={[4, 4, 0, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         );
+
+      case 'Counting & Throughput':
+      case 'Productivity':
+      case 'Fire & Smoke':
+      case 'Loitering Detection':
+      case 'Spillage Control':
+      case 'Intrusion Alerts':
+        // Generic fallback for the other solutions to prove the architecture works
+        return (
+          <div className="card full-width-card">
+            <h3 style={{ marginBottom: '20px' }}>{activeSolution} Analytics</h3>
+            <div className="metric-grid">
+              <div className="metric-box"><div className="metric-label">Total Events</div><div className="metric-value accent">{Math.floor(1240 * m)}</div></div>
+              <div className="metric-box"><div className="metric-label">Critical Alerts</div><div className="metric-value danger">{Math.floor(15 * m)}</div></div>
+              <div className="metric-box"><div className="metric-label">System Health</div><div className="metric-value success">Optimal</div></div>
+            </div>
+            <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-muted)', background: '#f8fafc', borderRadius: '12px' }}>
+              Detailed rich charts for <strong>{activeSolution}</strong> will render here (similar to PPE and ANPR).
+            </div>
+          </div>
+        );
+
       default:
-        return null; // Should not reach here
+        return null;
     }
   };
-
-  const isSystemView = ['Configuration', 'Alert Rules', 'Reports', 'Fleet Admin'].includes(activeLocation);
-
-  const filteredData = dummyData.filter(item => 
-    item.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    item.desc.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <div className="dashboard-area">
       <div className="page-header">
         <div>
-          <h1>{activeLocation}</h1>
-          <p>{isSystemView ? 'System Management Panel' : 'AI-Powered Video Analytics Overview'}</p>
+          <h1>{activeLocationFilter !== 'All Locations' ? activeLocationFilter : 'Global Overview'}</h1>
+          <p>Analyzing: <strong style={{color: 'var(--accent-blue)'}}>{activeSolution}</strong></p>
         </div>
         <div className="date-display">
           <Calendar size={16} />
@@ -310,57 +327,9 @@ const Dashboard = ({ activeLocation, searchQuery = '', userName = 'Rahul Jangir'
         </div>
       </div>
 
-      {isSystemView ? (
-        <div className="system-view-container" style={{ maxWidth: '800px', margin: '0 auto' }}>
-          {renderSystemView()}
-        </div>
-      ) : (
-        <div className="dashboard-grid">
-          {filteredData.length > 0 ? (
-            filteredData.map((data) => (
-              <div className="card" key={data.id}>
-                <div className="card-header">
-                  <div className="card-title-group">
-                    <div className={`card-icon ${data.iconClass}`}>
-                      {data.icon}
-                    </div>
-                    <div>
-                      <div className="card-title">{data.title}</div>
-                      <div className="card-desc">{data.desc}</div>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="card-content">
-                  {data.metrics.map((metric, idx) => (
-                    <div className="metric" key={idx}>
-                      <div className="metric-label">{metric.label}</div>
-                      <div className={`metric-value ${metric.alert ? 'danger' : ''} ${idx === 0 && !metric.alert ? 'highlight' : ''}`}>
-                        {metric.value}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div className="card-footer">
-                  <div className="live-indicator">
-                    <div className="dot"></div>
-                    Live Monitoring
-                  </div>
-                  <div className={`card-status ${data.statusClass}`}>
-                    {data.status === 'Alert' && <ShieldAlert size={12} style={{ marginRight: '4px' }} />}
-                    {data.status}
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div style={{ padding: '40px', gridColumn: '1 / -1', textAlign: 'center', color: 'var(--text-secondary)' }}>
-              No analytics modules found matching "{searchQuery}"
-            </div>
-          )}
-        </div>
-      )}
+      <div className="dashboard-grid">
+        {renderSolutionView()}
+      </div>
     </div>
   );
 };
