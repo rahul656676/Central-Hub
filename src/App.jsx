@@ -25,8 +25,15 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const toggleSidebar = () => {
+  const toggleSidebar = (e) => {
+    if (e) e.preventDefault();
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const closeSidebar = () => {
+    if (window.innerWidth <= 768) {
+      setIsSidebarOpen(false);
+    }
   };
 
   return (
@@ -35,6 +42,7 @@ function App() {
         isOpen={isSidebarOpen} 
         activeSolution={activeSolution} 
         setActiveSolution={setActiveSolution} 
+        closeSidebar={closeSidebar}
       />
       
       {isSidebarOpen && window.innerWidth <= 768 && (

@@ -75,7 +75,7 @@ const Header = ({
   return (
     <header className="top-header">
       <div className="header-left">
-        <button className="icon-btn mobile-menu-btn" onClick={toggleSidebar}>
+        <button type="button" className="icon-btn mobile-menu-btn" onClick={toggleSidebar}>
           <Menu size={24} />
         </button>
         <div className="header-search">
@@ -104,12 +104,12 @@ const Header = ({
           </select>
         </div>
 
-        <button className="icon-btn" onClick={toggleFullscreen} title="Toggle Fullscreen">
+        <button type="button" className="icon-btn" onClick={toggleFullscreen} title="Toggle Fullscreen">
           {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
         </button>
         
         <div style={{ position: 'relative' }} ref={notifRef}>
-          <button className="icon-btn" onClick={() => setShowNotifications(!showNotifications)}>
+          <button type="button" className="icon-btn" onClick={() => setShowNotifications(!showNotifications)}>
             <Bell size={20} />
             <span className="badge">3</span>
           </button>
@@ -176,7 +176,7 @@ const Header = ({
                       style={{ flex: 1, padding: '8px', borderRadius: '6px', border: '1px solid var(--card-border)', background: '#f8fafc', color: 'var(--text-primary)' }}
                       autoFocus
                     />
-                    <button onClick={handleNameSave} style={{ background: 'var(--success)', color: 'white', border: 'none', borderRadius: '6px', width: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
+                    <button type="button" onClick={handleNameSave} style={{ background: 'var(--success)', color: 'white', border: 'none', borderRadius: '6px', width: '36px', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
                       <Check size={16} />
                     </button>
                   </div>
@@ -187,6 +187,7 @@ const Header = ({
                   <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '16px' }}>System Administrator</div>
                   
                   <button 
+                    type="button"
                     onClick={() => { setIsEditingName(true); setTempName(userName); }}
                     style={{ width: '100%', padding: '8px 12px', background: '#f8fafc', border: '1px solid var(--card-border)', borderRadius: '6px', color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', transition: 'background 0.2s' }}
                     onMouseOver={(e) => e.target.style.background = '#f1f5f9'}

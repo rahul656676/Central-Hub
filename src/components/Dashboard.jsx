@@ -55,8 +55,9 @@ const ConfigurationView = () => {
       <div style={{ display: 'flex', borderBottom: '1px solid var(--card-border)', background: '#f8fafc' }}>
         {['General', 'User Roles', 'Camera Feeds'].map(tab => (
           <button 
+            type="button"
             key={tab}
-            onClick={() => setActiveTab(tab)}
+            onClick={(e) => { e.preventDefault(); setActiveTab(tab); }}
             style={{ 
               flex: 1, padding: '16px', background: activeTab === tab ? '#ffffff' : 'transparent',
               border: 'none', borderBottom: activeTab === tab ? '2px solid var(--accent-blue)' : '2px solid transparent',
@@ -77,7 +78,7 @@ const ConfigurationView = () => {
               <input type="text" defaultValue="Lake Group Central Hub" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)' }} />
             </div>
             <div>
-              <button style={{ padding: '10px 24px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>Save Changes</button>
+              <button type="button" onClick={(e) => e.preventDefault()} style={{ padding: '10px 24px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>Save Changes</button>
             </div>
           </div>
         )}

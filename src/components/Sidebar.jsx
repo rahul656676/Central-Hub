@@ -5,7 +5,7 @@ import {
   Package, Flame, Users, Activity, Droplets 
 } from 'lucide-react';
 
-const Sidebar = ({ isOpen, activeSolution, setActiveSolution }) => {
+const Sidebar = ({ isOpen, activeSolution, setActiveSolution, closeSidebar }) => {
   const solutions = [
     { name: 'Overview', icon: <LayoutDashboard size={18} /> },
     { name: 'PPE Monitoring', icon: <HardHat size={18} /> },
@@ -38,7 +38,11 @@ const Sidebar = ({ isOpen, activeSolution, setActiveSolution }) => {
           <div 
             key={item.name}
             className={`nav-item ${activeSolution === item.name ? 'active' : ''}`}
-            onClick={() => setActiveSolution(item.name)}
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveSolution(item.name);
+              if (closeSidebar) closeSidebar();
+            }}
           >
             {item.icon}
             <span>{item.name}</span>
@@ -50,7 +54,11 @@ const Sidebar = ({ isOpen, activeSolution, setActiveSolution }) => {
           <div 
             key={item.name}
             className={`nav-item ${activeSolution === item.name ? 'active' : ''}`}
-            onClick={() => setActiveSolution(item.name)}
+            onClick={(e) => {
+              e.preventDefault();
+              setActiveSolution(item.name);
+              if (closeSidebar) closeSidebar();
+            }}
           >
             {item.icon}
             <span>{item.name}</span>
