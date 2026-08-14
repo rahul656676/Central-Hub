@@ -441,6 +441,21 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
 .icon-productivity { color: #0ea5e9; background: #e0f2fe; }
 .icon-intrusion { color: #eab308; background: #fef9c3; }
 
+/* Split Card Layout for Pie Charts */
+.split-card {
+  display: flex;
+  flex-direction: row;
+  gap: 24px;
+}
+.split-card-left {
+  flex: 1;
+}
+.split-card-right {
+  flex: 1;
+  border-left: 1px solid var(--card-border);
+  padding-left: 24px;
+}
+
 /* Responsive adjustments */
 .sidebar-overlay {
   position: fixed;
@@ -473,4 +488,18 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
   .dashboard-area { padding: 16px; }
   .header-search { display: none; }
   .location-dropdown { max-width: 120px; }
+  
+  .split-card {
+    flex-direction: column;
+  }
+  .split-card-right {
+    border-left: none;
+    border-top: 1px solid var(--card-border);
+    padding-left: 0;
+    padding-top: 24px;
+  }
+  .chart-container {
+    height: 250px;
+    margin-left: -15px; /* Adjust for recharts mobile padding */
+  }
 }

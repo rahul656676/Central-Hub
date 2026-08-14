@@ -217,8 +217,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery }) => {
         
         return (
           <>
-            <div className="card full-width-card" style={{ display: 'flex', flexDirection: 'row', gap: '24px' }}>
-              <div style={{ flex: 1 }}>
+            <div className="card full-width-card split-card">
+              <div className="split-card-left">
                 <h3 style={{ marginBottom: '20px', color: 'var(--text-primary)' }}>Compliance Metrics</h3>
                 <div className="metric-grid">
                   <div className="metric-box">
@@ -235,7 +235,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery }) => {
                   </div>
                 </div>
               </div>
-              <div style={{ flex: 1, borderLeft: '1px solid var(--card-border)', paddingLeft: '24px' }}>
+              <div className="split-card-right">
                 <h3 style={{ marginBottom: '10px', color: 'var(--text-primary)' }}>Violation Breakdown</h3>
                 <div style={{ height: '200px' }}>
                   <ResponsiveContainer width="100%" height="100%">
@@ -360,8 +360,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery }) => {
           { name: 'Dry Powder/Material', value: Math.floor(8*m) },
         ];
         return (
-          <div className="card full-width-card" style={{ display: 'flex', flexDirection: 'row', gap: '24px' }}>
-            <div style={{ flex: 1 }}>
+          <div className="card full-width-card split-card">
+            <div className="split-card-left">
               <h3 style={{ marginBottom: '20px' }}>Spillage Incident Breakdown</h3>
               <div className="metric-grid">
                 <div className="metric-box"><div className="metric-label">Spills Detected (Week)</div><div className="metric-value danger">{Math.floor(29 * m)}</div></div>
@@ -369,7 +369,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery }) => {
                 <div className="metric-box"><div className="metric-label">Unresolved Spills</div><div className="metric-value warning">1</div></div>
               </div>
             </div>
-            <div style={{ flex: 1, borderLeft: '1px solid var(--card-border)', paddingLeft: '24px' }}>
+            <div className="split-card-right">
               <h3 style={{ marginBottom: '10px' }}>Spill Types Detected</h3>
               <div style={{ height: '220px' }}>
                 <ResponsiveContainer width="100%" height="100%">
