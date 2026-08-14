@@ -289,22 +289,199 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery }) => {
         );
 
       case 'Counting & Throughput':
-      case 'Productivity':
-      case 'Fire & Smoke':
-      case 'Loitering Detection':
-      case 'Spillage Control':
-      case 'Intrusion Alerts':
-        // Generic fallback for the other solutions to prove the architecture works
+        const countingData = [
+          { time: '08:00', actual: Math.floor(120*m), target: 150 },
+          { time: '10:00', actual: Math.floor(180*m), target: 150 },
+          { time: '12:00', actual: Math.floor(190*m), target: 200 },
+          { time: '14:00', actual: Math.floor(140*m), target: 150 },
+          { time: '16:00', actual: Math.floor(210*m), target: 200 },
+          { time: '18:00', actual: Math.floor(160*m), target: 150 },
+        ];
         return (
           <div className="card full-width-card">
-            <h3 style={{ marginBottom: '20px' }}>{activeSolution} Analytics</h3>
+            <h3 style={{ marginBottom: '20px' }}>Production Throughput (Target vs Actual)</h3>
             <div className="metric-grid">
-              <div className="metric-box"><div className="metric-label">Total Events</div><div className="metric-value accent">{Math.floor(1240 * m)}</div></div>
-              <div className="metric-box"><div className="metric-label">Critical Alerts</div><div className="metric-value danger">{Math.floor(15 * m)}</div></div>
-              <div className="metric-box"><div className="metric-label">System Health</div><div className="metric-value success">Optimal</div></div>
+              <div className="metric-box"><div className="metric-label">Items Counted Today</div><div className="metric-value accent">{Math.floor(8450 * m)}</div></div>
+              <div className="metric-box"><div className="metric-label">Current Rate (Items/Hr)</div><div className="metric-value">{Math.floor(412 * m)}</div></div>
+              <div className="metric-box"><div className="metric-label">AI Accuracy</div><div className="metric-value success">99.8%</div></div>
             </div>
-            <div style={{ padding: '60px', textAlign: 'center', color: 'var(--text-muted)', background: '#f8fafc', borderRadius: '12px' }}>
-              Detailed rich charts for <strong>{activeSolution}</strong> will render here (similar to PPE and ANPR).
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={countingData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="time" stroke="#94a3b8" />
+                  <YAxis stroke="#94a3b8" />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend />
+                  <Area type="monotone" dataKey="target" name="Target Throughput" stroke="#94a3b8" strokeDasharray="5 5" fill="none" />
+                  <Area type="monotone" dataKey="actual" name="Actual Counted" stroke="#8b5cf6" fillOpacity={0.2} fill="#8b5cf6" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        );
+
+      case 'Loitering Detection':
+        const loiteringData = [
+          { zone: 'Gate A', alerts: Math.floor(12*m) },
+          { zone: 'Gate B', alerts: Math.floor(3*m) },
+          { zone: 'Perimeter Fence', alerts: Math.floor(25*m) },
+          { zone: 'Loading Bay', alerts: Math.floor(8*m) },
+          { zone: 'Restricted Area 1', alerts: Math.floor(18*m) },
+        ];
+        return (
+          <div className="card full-width-card">
+            <h3 style={{ marginBottom: '20px' }}>Loitering Alerts by Zone</h3>
+            <div className="metric-grid">
+              <div className="metric-box"><div className="metric-label">Total Loitering Alerts</div><div className="metric-value danger">{Math.floor(66 * m)}</div></div>
+              <div className="metric-box"><div className="metric-label">Avg Dwell Time</div><div className="metric-value accent">{Math.floor(4.2 * m)} mins</div></div>
+              <div className="metric-box"><div className="metric-label">Most Active Zone</div><div className="metric-value" style={{fontSize:'1.1rem', marginTop:'8px'}}>Perimeter Fence</div></div>
+            </div>
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={loiteringData} layout="vertical" margin={{ top: 5, right: 30, left: 40, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#e2e8f0" />
+                  <XAxis type="number" stroke="#94a3b8" />
+                  <YAxis dataKey="zone" type="category" stroke="#94a3b8" width={100} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Bar dataKey="alerts" name="Total Alerts" fill="#f43f5e" radius={[0, 4, 4, 0]} barSize={30} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        );
+
+      case 'Spillage Control':
+        const spillData = [
+          { name: 'Chemical/Hazardous', value: Math.floor(2*m) },
+          { name: 'Oil/Lubricant', value: Math.floor(5*m) },
+          { name: 'Water', value: Math.floor(14*m) },
+          { name: 'Dry Powder/Material', value: Math.floor(8*m) },
+        ];
+        return (
+          <div className="card full-width-card" style={{ display: 'flex', flexDirection: 'row', gap: '24px' }}>
+            <div style={{ flex: 1 }}>
+              <h3 style={{ marginBottom: '20px' }}>Spillage Incident Breakdown</h3>
+              <div className="metric-grid">
+                <div className="metric-box"><div className="metric-label">Spills Detected (Week)</div><div className="metric-value danger">{Math.floor(29 * m)}</div></div>
+                <div className="metric-box"><div className="metric-label">Avg Clean-up Time</div><div className="metric-value accent">{Math.floor(14 * m)} mins</div></div>
+                <div className="metric-box"><div className="metric-label">Unresolved Spills</div><div className="metric-value warning">1</div></div>
+              </div>
+            </div>
+            <div style={{ flex: 1, borderLeft: '1px solid var(--card-border)', paddingLeft: '24px' }}>
+              <h3 style={{ marginBottom: '10px' }}>Spill Types Detected</h3>
+              <div style={{ height: '220px' }}>
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie data={spillData} cx="50%" cy="50%" innerRadius={60} outerRadius={80} paddingAngle={5} dataKey="value">
+                      <Cell fill="#ef4444" /> {/* Hazardous */}
+                      <Cell fill="#f59e0b" /> {/* Oil */}
+                      <Cell fill="#3b82f6" /> {/* Water */}
+                      <Cell fill="#8b5cf6" /> {/* Dry */}
+                    </Pie>
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend />
+                  </PieChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
+        );
+
+      case 'Fire & Smoke':
+        const fireData = [
+          { time: '00:00', temp: 22, critical: 60 },
+          { time: '04:00', temp: 21, critical: 60 },
+          { time: '08:00', temp: 25, critical: 60 },
+          { time: '12:00', temp: 34, critical: 60 },
+          { time: '14:00', temp: 58, critical: 60 }, // Spike!
+          { time: '16:00', temp: 30, critical: 60 },
+          { time: '20:00', temp: 26, critical: 60 },
+        ];
+        return (
+          <div className="card full-width-card">
+            <h3 style={{ marginBottom: '20px' }}>Thermal & Smoke Sensor Trends</h3>
+            <div className="metric-grid">
+              <div className="metric-box"><div className="metric-label">Active Sensors</div><div className="metric-value success">42 / 42</div></div>
+              <div className="metric-box"><div className="metric-label">Temperature Anomalies</div><div className="metric-value warning">1</div></div>
+              <div className="metric-box"><div className="metric-label">False Alarms Filtered</div><div className="metric-value accent">3</div></div>
+            </div>
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={fireData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="time" stroke="#94a3b8" />
+                  <YAxis stroke="#94a3b8" domain={[0, 80]} />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend />
+                  <Line type="monotone" dataKey="critical" name="Critical Threshold (°C)" stroke="#ef4444" strokeWidth={2} strokeDasharray="5 5" dot={false} />
+                  <Line type="monotone" dataKey="temp" name="Max Temp Detected (°C)" stroke="#f59e0b" strokeWidth={3} activeDot={{ r: 8 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        );
+
+      case 'Productivity':
+        const prodData = [
+          { zone: 'Assembly Line 1', active: Math.floor(320*m), idle: Math.floor(40*m) },
+          { zone: 'Packaging', active: Math.floor(280*m), idle: Math.floor(60*m) },
+          { zone: 'Loading Bay', active: Math.floor(190*m), idle: Math.floor(110*m) },
+          { zone: 'Forklift Path', active: Math.floor(210*m), idle: Math.floor(50*m) },
+        ];
+        return (
+          <div className="card full-width-card">
+            <h3 style={{ marginBottom: '20px' }}>Workforce Efficiency by Zone</h3>
+            <div className="metric-grid">
+              <div className="metric-box"><div className="metric-label">Active Man-Hours</div><div className="metric-value accent">{Math.floor(16.6 * m)}K</div></div>
+              <div className="metric-box"><div className="metric-label">Avg Idle Time</div><div className="metric-value warning">18%</div></div>
+              <div className="metric-box"><div className="metric-label">Overall Efficiency</div><div className="metric-value success">82%</div></div>
+            </div>
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={prodData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="zone" stroke="#94a3b8" />
+                  <YAxis stroke="#94a3b8" />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend />
+                  <Bar dataKey="active" stackId="a" name="Active Time (Mins)" fill="#0ea5e9" />
+                  <Bar dataKey="idle" stackId="a" name="Idle Time (Mins)" fill="#e2e8f0" />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </div>
+        );
+
+      case 'Intrusion Alerts':
+        const intrudData = [
+          { time: '00:00', breaches: Math.floor(6*m) },
+          { time: '04:00', breaches: Math.floor(8*m) },
+          { time: '08:00', breaches: 0 },
+          { time: '12:00', breaches: 0 },
+          { time: '16:00', breaches: Math.floor(1*m) },
+          { time: '20:00', breaches: Math.floor(4*m) },
+          { time: '24:00', breaches: Math.floor(7*m) },
+        ];
+        return (
+          <div className="card full-width-card">
+            <h3 style={{ marginBottom: '20px' }}>Perimeter Breaches by Time of Day</h3>
+            <div className="metric-grid">
+              <div className="metric-box"><div className="metric-label">Breaches Detected (Week)</div><div className="metric-value danger">{Math.floor(26 * m)}</div></div>
+              <div className="metric-box"><div className="metric-label">False Positives (Wildlife)</div><div className="metric-value">14</div></div>
+              <div className="metric-box"><div className="metric-label">Active Patrol Dispatches</div><div className="metric-value accent">{Math.floor(8 * m)}</div></div>
+            </div>
+            <div className="chart-container">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={intrudData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                  <XAxis dataKey="time" stroke="#94a3b8" />
+                  <YAxis stroke="#94a3b8" />
+                  <Tooltip content={<CustomTooltip />} />
+                  <Legend />
+                  <Area type="monotone" dataKey="breaches" name="Confirmed Intrusions" stroke="#eab308" fillOpacity={0.2} fill="#eab308" />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
           </div>
         );
