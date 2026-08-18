@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, AlertTriangle, CheckCircle, Sliders, Camera, Car, User, Box, Flame, Droplets } from 'lucide-react';
+import { Calendar, AlertTriangle, CheckCircle, Sliders, Camera, Car, User, Box, Flame, Droplets, Download, Filter, Search, Activity, Video } from 'lucide-react';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, 
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
@@ -41,10 +41,33 @@ const Thumbnail = ({ icon: Icon, color = '#94a3b8' }) => (
   </div>
 );
 
+// Reusable Toolbar for Tables
+const TableToolbar = ({ title }) => (
+  <div className="table-toolbar">
+    <h3 style={{ margin: 0, display: 'flex', alignItems: 'center' }}>
+      {title}
+    </h3>
+    <div className="toolbar-actions">
+      <div style={{ position: 'relative' }}>
+        <Search size={16} color="#94a3b8" style={{ position: 'absolute', left: '10px', top: '10px' }} />
+        <input type="text" placeholder="Search logs..." style={{ padding: '8px 12px 8px 32px', borderRadius: '6px', border: '1px solid var(--card-border)', background: '#f8fafc', fontSize: '0.875rem' }} />
+      </div>
+      <select className="filter-dropdown">
+        <option>Last 24 Hours</option>
+        <option>Last 7 Days</option>
+        <option>This Month</option>
+      </select>
+      <button type="button" className="action-btn" style={{ display: 'flex', alignItems: 'center', gap: '6px' }} title="Export PDF">
+        <Download size={14} /> Export
+      </button>
+    </div>
+  </div>
+);
+
 const ConfigurationView = () => {
   const [activeTab, setActiveTab] = useState('General');
   return (
-    <div className="card full-width-card" style={{ padding: '0', overflow: 'hidden' }}>
+    <div className="card full-width-card animate-fade-in" style={{ padding: '0', overflow: 'hidden' }}>
       <div style={{ padding: '24px', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: '16px' }}>
         <Sliders size={28} color="var(--accent-blue)" />
         <div>
@@ -75,7 +98,7 @@ const ConfigurationView = () => {
 
       <div style={{ padding: '32px', minHeight: '300px', background: '#ffffff' }}>
         {activeTab === 'General' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', textAlign: 'left', maxWidth: '600px' }}>
+          <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '24px', textAlign: 'left', maxWidth: '600px' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>System Name</label>
               <input type="text" defaultValue="Lake Group Central Hub" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)' }} />
@@ -85,8 +108,8 @@ const ConfigurationView = () => {
             </div>
           </div>
         )}
-        {activeTab === 'User Roles' && <div style={{ color: 'var(--text-secondary)' }}>User roles management interface.</div>}
-        {activeTab === 'Camera Feeds' && <div style={{ color: 'var(--text-secondary)' }}>RTSP stream configuration interface.</div>}
+        {activeTab === 'User Roles' && <div className="animate-fade-in" style={{ color: 'var(--text-secondary)' }}>User roles management interface.</div>}
+        {activeTab === 'Camera Feeds' && <div className="animate-fade-in" style={{ color: 'var(--text-secondary)' }}>RTSP stream configuration interface.</div>}
       </div>
     </div>
   );
@@ -106,7 +129,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
   const isSystemView = ['Configuration', 'Alert Rules', 'Reports', 'Fleet Admin'].includes(activeSolution);
   if (isSystemView) {
     return (
-      <div className="dashboard-area">
+      <div className="dashboard-area animate-fade-in">
         <div className="page-header">
           <div>
             <h1>{activeSolution}</h1>
@@ -129,68 +152,112 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
   const renderSolutionView = () => {
     switch (activeSolution) {
       case 'Overview':
-        const trendData = [
-          { name: 'Mon', alerts: Math.floor(120 * m), processed: Math.floor(4000 * m) },
-          { name: 'Tue', alerts: Math.floor(150 * m), processed: Math.floor(3000 * m) },
-          { name: 'Wed', alerts: Math.floor(90 * m), processed: Math.floor(5000 * m) },
-          { name: 'Thu', alerts: Math.floor(200 * m), processed: Math.floor(4500 * m) },
-          { name: 'Fri', alerts: Math.floor(180 * m), processed: Math.floor(4800 * m) },
-          { name: 'Sat', alerts: Math.floor(80 * m), processed: Math.floor(2000 * m) },
-          { name: 'Sun', alerts: Math.floor(60 * m), processed: Math.floor(1500 * m) },
-        ];
         return (
           <>
+            {/* Top Metrics */}
             <div className="card one-third-card">
               <div className="card-title-group">
-                <div className="card-icon" style={{ background: '#e0f2fe', color: '#0ea5e9' }}><CheckCircle size={20} /></div>
-                <div><div className="card-title">System Status</div><div className="card-desc">Overall health</div></div>
+                <div className="card-icon" style={{ background: '#e0f2fe', color: '#0ea5e9' }}><Activity size={20} /></div>
+                <div><div className="card-title">Live System Status</div><div className="card-desc">Overall health</div></div>
               </div>
-              <div className="metric-value success">Operational</div>
+              <div className="metric-value success" style={{ display: 'flex', alignItems: 'center' }}>
+                <span className="status-dot live"></span> Operational
+              </div>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '8px' }}>99.98% Uptime across {activeLocationFilter}</p>
             </div>
             
             <div className="card one-third-card">
               <div className="card-title-group">
                 <div className="card-icon" style={{ background: '#fee2e2', color: '#ef4444' }}><AlertTriangle size={20} /></div>
-                <div><div className="card-title">Total Alerts Today</div><div className="card-desc">Needs attention</div></div>
+                <div><div className="card-title">Critical Alerts Today</div><div className="card-desc">Needs attention</div></div>
               </div>
-              <div className="metric-value danger">{Math.floor(142 * m)}</div>
-              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '8px' }}>+12% from yesterday</p>
+              <div className="metric-value danger" style={{ display: 'flex', alignItems: 'center' }}>
+                <span className="status-dot alert"></span> {Math.floor(14 * m)}
+              </div>
+              <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '8px' }}>+3 from yesterday</p>
             </div>
             
             <div className="card one-third-card">
               <div className="card-title-group">
-                <div className="card-icon" style={{ background: '#ede9fe', color: '#8b5cf6' }}><Sliders size={20} /></div>
-                <div><div className="card-title">Active AI Modules</div><div className="card-desc">Currently running</div></div>
+                <div className="card-icon" style={{ background: '#ede9fe', color: '#8b5cf6' }}><Video size={20} /></div>
+                <div><div className="card-title">Active AI Cameras</div><div className="card-desc">Currently streaming</div></div>
               </div>
-              <div className="metric-value accent">8 / 8</div>
+              <div className="metric-value accent">42 / 42</div>
               <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '8px' }}>All edge nodes connected</p>
             </div>
             
-            <div className="card full-width-card">
-              <h3 style={{ marginBottom: '20px', color: 'var(--text-primary)' }}>Weekly Alert vs Processing Trend</h3>
-              <div className="chart-container">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={trendData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="colorAlerts" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#ef4444" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#ef4444" stopOpacity={0}/>
-                      </linearGradient>
-                      <linearGradient id="colorProcessed" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
-                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
-                    <XAxis dataKey="name" stroke="#94a3b8" />
-                    <YAxis stroke="#94a3b8" />
-                    <Tooltip content={<CustomTooltip />} />
-                    <Legend />
-                    <Area type="monotone" dataKey="processed" name="Total Events Processed" stroke="#3b82f6" fillOpacity={1} fill="url(#colorProcessed)" />
-                    <Area type="monotone" dataKey="alerts" name="Alerts Triggered" stroke="#ef4444" fillOpacity={1} fill="url(#colorAlerts)" />
-                  </AreaChart>
-                </ResponsiveContainer>
+            {/* Command Center Layout */}
+            <div className="card full-width-card split-card" style={{ marginTop: '24px' }}>
+              
+              {/* Left Side: Camera Matrix */}
+              <div className="split-card-left" style={{ flex: 2 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                  <h3 style={{ margin: 0 }}>Command Center: Live Feeds</h3>
+                  <span style={{ fontSize: '0.75rem', background: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>LIVE</span>
+                </div>
+                <div className="data-grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: 0 }}>
+                  <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem' }}>CAM-01: Main Gate (ANPR)</div>
+                    <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#475569' }}><Camera size={32} /></div>
+                  </div>
+                  <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem' }}>CAM-04: Assembly Area (PPE)</div>
+                    <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#475569' }}><Camera size={32} /></div>
+                  </div>
+                  <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem' }}>CAM-09: Perimeter Fence</div>
+                    <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#475569' }}><Camera size={32} /></div>
+                  </div>
+                  <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
+                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem' }}>CAM-12: Chemical Depot</div>
+                    <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#475569' }}><Camera size={32} /></div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right Side: Universal Event Feed */}
+              <div className="split-card-right" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <h3 style={{ marginBottom: '16px', marginTop: 0 }}>Universal Event Ticker</h3>
+                <div style={{ flex: 1, overflowY: 'auto', maxHeight: '380px', paddingRight: '8px' }}>
+                  
+                  {/* Event Item */}
+                  <div style={{ padding: '12px', borderBottom: '1px solid var(--card-border)', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--danger)', marginTop: '6px' }}></div>
+                    <div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>Intrusion Detected</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Perimeter Fence North - Human</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>Just now</div>
+                    </div>
+                  </div>
+                  
+                  <div style={{ padding: '12px', borderBottom: '1px solid var(--card-border)', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--warning)', marginTop: '6px' }}></div>
+                    <div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>PPE Violation: No Helmet</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Assembly Area - Zone B</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>2 mins ago</div>
+                    </div>
+                  </div>
+
+                  <div style={{ padding: '12px', borderBottom: '1px solid var(--card-border)', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--success)', marginTop: '6px' }}></div>
+                    <div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>ANPR: Authorized Vehicle</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Plate: T 123 ABC - Main Gate</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>5 mins ago</div>
+                    </div>
+                  </div>
+
+                  <div style={{ padding: '12px', borderBottom: '1px solid var(--card-border)', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--success)', marginTop: '6px' }}></div>
+                    <div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>System Sync Complete</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>All 42 nodes responding</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>15 mins ago</div>
+                    </div>
+                  </div>
+
+                </div>
               </div>
             </div>
           </>
@@ -230,9 +297,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
               </div>
             </div>
             
-            {/* NEW: Data Table for PPE */}
             <div className="card full-width-card" style={{ marginTop: '24px' }}>
-              <h3 style={{ marginBottom: '16px' }}>Recent Violations Log</h3>
+              <TableToolbar title="Recent Violations Log" />
               <div className="data-table-wrapper">
                 <table className="data-table">
                   <thead>
@@ -250,21 +316,21 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                       <td>Today, 10:42 AM</td>
                       <td>Gate 4 - Loading</td>
                       <td><span style={{ color: '#ef4444', fontWeight: 600 }}>No Helmet</span></td>
-                      <td><button className="action-btn">Alert Supervisor</button></td>
+                      <td><button type="button" className="action-btn">Alert Supervisor</button></td>
                     </tr>
                     <tr>
                       <td><Thumbnail icon={User} color="#f59e0b" /></td>
                       <td>Today, 09:15 AM</td>
                       <td>Area B - Processing</td>
                       <td><span style={{ color: '#f59e0b', fontWeight: 600 }}>No Vest</span></td>
-                      <td><button className="action-btn">Alert Supervisor</button></td>
+                      <td><button type="button" className="action-btn">Alert Supervisor</button></td>
                     </tr>
                     <tr>
                       <td><Thumbnail icon={User} color="#ef4444" /></td>
                       <td>Yesterday, 16:30 PM</td>
                       <td>Gate 1 - Main</td>
                       <td><span style={{ color: '#ef4444', fontWeight: 600 }}>No Helmet</span></td>
-                      <td><button className="action-btn" style={{ background: '#e2e8f0' }}>Resolved</button></td>
+                      <td><button type="button" className="action-btn" style={{ background: '#e2e8f0' }}>Resolved</button></td>
                     </tr>
                   </tbody>
                 </table>
@@ -285,7 +351,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
         return (
           <>
             <div className="card full-width-card">
-              <h3 style={{ marginBottom: '20px' }}>Vehicle & Container Throughput (Today)</h3>
+              <h3 style={{ marginBottom: '20px' }}>Vehicle & Container Throughput</h3>
               <div className="metric-grid">
                 <div className="metric-box"><div className="metric-label">Plates Scanned</div><div className="metric-value accent">{Math.floor(515 * m)}</div></div>
                 <div className="metric-box"><div className="metric-label">Containers Matched</div><div className="metric-value success">{Math.floor(480 * m)}</div></div>
@@ -306,9 +372,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
               </div>
             </div>
 
-            {/* NEW: Data Table for ANPR */}
             <div className="card full-width-card" style={{ marginTop: '24px' }}>
-              <h3 style={{ marginBottom: '16px' }}>Live Gate Activity Log</h3>
+              <TableToolbar title="Live Gate Activity Log" />
               <div className="data-table-wrapper">
                 <table className="data-table">
                   <thead>
@@ -386,9 +451,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
               </div>
             </div>
 
-            {/* NEW: Data Table for Counting */}
             <div className="card full-width-card" style={{ marginTop: '24px' }}>
-              <h3 style={{ marginBottom: '16px' }}>Shift Performance Log</h3>
+              <TableToolbar title="Shift Performance Log" />
               <div className="data-table-wrapper">
                 <table className="data-table">
                   <thead>
@@ -455,8 +519,13 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
               </div>
             </div>
 
-            {/* NEW: Cards for Loitering */}
-            <h3 style={{ marginTop: '32px', color: 'var(--text-primary)' }}>Active Loitering Threats</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '32px' }}>
+              <h3 style={{ color: 'var(--text-primary)', margin: 0 }}>Active Loitering Threats</h3>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <span className="status-dot alert"></span> <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Live Monitoring</span>
+              </div>
+            </div>
+            
             <div className="data-grid">
               <div className="data-grid-card">
                 <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
@@ -468,7 +537,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ color: '#ef4444', fontWeight: 600 }}>Dwell: 14 mins</div>
-                  <button className="action-btn">Dispatch Guard</button>
+                  <button type="button" className="action-btn">Dispatch Guard</button>
                 </div>
               </div>
               <div className="data-grid-card">
@@ -481,7 +550,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div style={{ color: '#f59e0b', fontWeight: 600 }}>Dwell: 6 mins</div>
-                  <button className="action-btn">Review Feed</button>
+                  <button type="button" className="action-btn">Review Feed</button>
                 </div>
               </div>
             </div>
@@ -525,9 +594,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
               </div>
             </div>
 
-            {/* NEW: Data Table for Spillage */}
             <div className="card full-width-card" style={{ marginTop: '24px' }}>
-              <h3 style={{ marginBottom: '16px' }}>Incident Response Log</h3>
+              <TableToolbar title="Incident Response Log" />
               <div className="data-table-wrapper">
                 <table className="data-table">
                   <thead>
@@ -547,7 +615,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                       <td><span style={{ color: '#ef4444', fontWeight: 600 }}>Hazardous Liquid</span></td>
                       <td>14:22:00</td>
                       <td><span style={{ color: '#f59e0b' }}>Pending</span></td>
-                      <td><button className="action-btn">Dispatch Cleaning Crew</button></td>
+                      <td><button type="button" className="action-btn">Dispatch Cleaning Crew</button></td>
                     </tr>
                     <tr>
                       <td><Thumbnail icon={Droplets} color="#f59e0b" /></td>
@@ -555,7 +623,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                       <td>Oil / Lubricant</td>
                       <td>09:15:00</td>
                       <td>09:45:00</td>
-                      <td><button className="action-btn" style={{ background: '#e2e8f0' }}>Resolved</button></td>
+                      <td><button type="button" className="action-btn" style={{ background: '#e2e8f0' }}>Resolved</button></td>
                     </tr>
                   </tbody>
                 </table>
@@ -598,8 +666,13 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
               </div>
             </div>
 
-            {/* NEW: Grid for Thermal Zones */}
-            <h3 style={{ marginTop: '32px', color: 'var(--text-primary)' }}>Live Thermal Sensors</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '32px' }}>
+              <h3 style={{ color: 'var(--text-primary)', margin: 0 }}>Live Thermal Sensors</h3>
+              <div style={{ display: 'flex', gap: '8px' }}>
+                <span className="status-dot live"></span> <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Sensors Online</span>
+              </div>
+            </div>
+            
             <div className="data-grid">
               <div className="data-grid-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
@@ -614,7 +687,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                   <span style={{ fontWeight: 600 }}>24°C</span>
                 </div>
               </div>
-              <div className="data-grid-card" style={{ border: '1px solid #f59e0b' }}>
+              <div className="data-grid-card" style={{ border: '1px solid #f59e0b', boxShadow: '0 4px 12px rgba(245, 158, 11, 0.1)' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
                   <div style={{ fontWeight: 600 }}>Zone C - Generator</div>
                   <Flame size={20} color="#f59e0b" />
@@ -662,9 +735,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
               </div>
             </div>
 
-            {/* NEW: Data Table for Productivity */}
             <div className="card full-width-card" style={{ marginTop: '24px' }}>
-              <h3 style={{ marginBottom: '16px' }}>Workstation Live Status</h3>
+              <TableToolbar title="Workstation Live Status" />
               <div className="data-table-wrapper">
                 <table className="data-table">
                   <thead>
@@ -679,21 +751,21 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                   <tbody>
                     <tr>
                       <td>Assembly Line 1</td>
-                      <td><span style={{ color: '#10b981', fontWeight: 600 }}>Active</span></td>
+                      <td><span className="status-dot live"></span><span style={{ color: '#10b981', fontWeight: 600 }}>Active</span></td>
                       <td>-</td>
                       <td>12</td>
                       <td>John D.</td>
                     </tr>
                     <tr>
                       <td>Loading Bay</td>
-                      <td><span style={{ color: '#94a3b8', fontWeight: 600 }}>Idle</span></td>
+                      <td><span className="status-dot alert"></span><span style={{ color: '#94a3b8', fontWeight: 600 }}>Idle</span></td>
                       <td><span style={{ color: '#ef4444' }}>45 mins</span></td>
                       <td>3</td>
                       <td>Sarah K.</td>
                     </tr>
                     <tr>
                       <td>Packaging Area</td>
-                      <td><span style={{ color: '#10b981', fontWeight: 600 }}>Active</span></td>
+                      <td><span className="status-dot live"></span><span style={{ color: '#10b981', fontWeight: 600 }}>Active</span></td>
                       <td>-</td>
                       <td>8</td>
                       <td>Mike R.</td>
@@ -738,9 +810,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
               </div>
             </div>
 
-            {/* NEW: Data Table for Intrusion */}
             <div className="card full-width-card" style={{ marginTop: '24px' }}>
-              <h3 style={{ marginBottom: '16px' }}>Perimeter Security Log</h3>
+              <TableToolbar title="Perimeter Security Log" />
               <div className="data-table-wrapper">
                 <table className="data-table">
                   <thead>
@@ -804,7 +875,9 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
       </div>
 
       <div className="dashboard-grid">
-        {renderSolutionView()}
+        <div className="animate-fade-in" key={activeSolution} style={{ width: '100%' }}>
+          {renderSolutionView()}
+        </div>
       </div>
     </div>
   );
