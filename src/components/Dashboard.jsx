@@ -1026,10 +1026,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
         </div>
       </div>
 
-      <div className="dashboard-grid">
-        <div className="animate-fade-in" key={activeSolution} style={{ width: '100%' }}>
-          {renderSolutionView()}
-        </div>
+      <div className="dashboard-grid animate-fade-in" key={activeSolution}>
+        {renderSolutionView()}
       </div>
 
       <IncidentDrawer incident={selectedIncident} onClose={() => setSelectedIncident(null)} />
