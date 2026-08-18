@@ -47,7 +47,8 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
 .app-container {
   display: flex;
   height: 100vh;
-  width: 100vw;
+  width: 100%;
+  max-width: 100%;
   overflow: hidden;
 }
 
@@ -173,6 +174,7 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
   border-radius: 20px;
   border: 1px solid var(--card-border);
   width: 300px;
+  max-width: 100%;
   transition: all 0.2s ease;
 }
 
@@ -299,7 +301,9 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
 .dashboard-area {
   flex: 1;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 32px;
+  max-width: 100%;
 }
 
 .page-header {
@@ -347,6 +351,9 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
   box-shadow: var(--shadow-sm);
   display: flex;
   flex-direction: column;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .card-title-group {
@@ -536,7 +543,9 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
 /* Data Tables */
 .data-table-wrapper {
   width: 100%;
+  max-width: 100%;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 .data-table {
   width: 100%;
