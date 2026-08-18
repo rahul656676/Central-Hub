@@ -781,6 +781,26 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
     align-items: flex-start;
     gap: 16px;
   }
+  .page-header h1 {
+    font-size: 1.5rem;
+  }
+  .dashboard-area {
+    padding: 16px;
+  }
+  .card {
+    padding: 16px;
+  }
+  .top-header {
+    padding: 0 16px;
+  }
+  .table-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .toolbar-actions {
+    width: 100%;
+    flex-wrap: wrap;
+  }
   .data-grid {
     grid-template-columns: 1fr;
   }
