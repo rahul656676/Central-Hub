@@ -749,19 +749,47 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
 @media (max-width: 768px) {
   .sidebar {
     position: fixed;
-    z-index: 50;
+    height: 100vh;
+    left: -280px;
+    z-index: 100;
   }
   .sidebar.open {
-    transform: translateX(0);
-    box-shadow: 4px 0 15px rgba(0,0,0,0.1);
+    left: 0;
   }
-  .dashboard-grid { grid-template-columns: 1fr; }
-  .two-thirds-card { grid-column: span 1; }
-  .top-header { padding: 0 16px; }
-  .dashboard-area { padding: 16px; }
-  .header-search { display: none; }
-  .location-dropdown { max-width: 120px; }
+  .main-content {
+    margin-left: 0;
+  }
+  .header-actions {
+    display: none;
+  }
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
   
+  .metric-grid {
+    grid-template-columns: 1fr;
+  }
+  .card-title-group {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .chart-container {
+    height: 250px;
+  }
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .data-grid {
+    grid-template-columns: 1fr;
+  }
+  .camera-matrix {
+    grid-template-columns: 1fr;
+  }
+  .incident-drawer {
+    width: 100vw;
+  }
   .split-card {
     flex-direction: column;
   }

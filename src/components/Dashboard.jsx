@@ -68,6 +68,15 @@ const TableToolbar = ({ title }) => (
 const IncidentDrawer = ({ incident, onClose }) => {
   if (!incident) return null;
 
+  const getDrawerImage = () => {
+    switch(incident.type) {
+      case 'ANPR': return "https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=800&q=80";
+      case 'PPE Violation': return "https://images.unsplash.com/photo-1504917595217-d4bfd27eb278?auto=format&fit=crop&w=800&q=80";
+      case 'Spillage': return "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=800&q=80";
+      default: return "https://images.unsplash.com/photo-1502672260266-1c1c24240f38?auto=format&fit=crop&w=800&q=80";
+    }
+  };
+
   return (
     <>
       <div className="drawer-overlay" onClick={onClose}></div>
@@ -84,11 +93,10 @@ const IncidentDrawer = ({ incident, onClose }) => {
         
         <div className="drawer-body">
           {/* Main Image Placeholder */}
-          <div className="drawer-image-placeholder">
-            <div style={{ textAlign: 'center' }}>
-              <Camera size={48} style={{ marginBottom: '16px', opacity: 0.5 }} />
-              <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>High-Res Snapshot</div>
-              <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Camera Feed: {incident.camera || 'Main Gate'}</div>
+          <div className="drawer-image-placeholder" style={{ padding: 0 }}>
+            <img src={getDrawerImage()} alt="Incident Snapshot" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <div style={{ position: 'absolute', bottom: 12, left: 12, background: 'rgba(0,0,0,0.7)', color: 'white', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span className="status-dot alert" style={{ margin: 0 }}></span> Live Feed Captured
             </div>
           </div>
 
@@ -339,22 +347,22 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                   <h3 style={{ margin: 0 }}>Command Center: Live Feeds</h3>
                   <span style={{ fontSize: '0.75rem', background: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>LIVE</span>
                 </div>
-                <div className="data-grid" style={{ gridTemplateColumns: '1fr 1fr', gap: '12px', marginTop: 0 }}>
+                <div className="data-grid camera-matrix" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px', marginTop: 0 }}>
                   <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem' }}>CAM-01: Main Gate (ANPR)</div>
-                    <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#475569' }}><Camera size={32} /></div>
+                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>CAM-01: Main Gate (ANPR)</div>
+                    <img src="https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=400&q=80" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
                   </div>
                   <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem' }}>CAM-04: Assembly Area (PPE)</div>
-                    <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#475569' }}><Camera size={32} /></div>
+                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>CAM-04: Assembly Area (PPE)</div>
+                    <img src="https://images.unsplash.com/photo-1504917595217-d4bfd27eb278?auto=format&fit=crop&w=400&q=80" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
                   </div>
                   <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem' }}>CAM-09: Perimeter Fence</div>
-                    <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#475569' }}><Camera size={32} /></div>
+                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>CAM-09: Perimeter Fence</div>
+                    <img src="https://images.unsplash.com/photo-1502672260266-1c1c24240f38?auto=format&fit=crop&w=400&q=80" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
                   </div>
                   <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem' }}>CAM-12: Chemical Depot</div>
-                    <div style={{ display: 'flex', height: '100%', alignItems: 'center', justifyContent: 'center', color: '#475569' }}><Camera size={32} /></div>
+                    <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>CAM-12: Chemical Depot</div>
+                    <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=400&q=80" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
                   </div>
                 </div>
               </div>
