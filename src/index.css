@@ -537,34 +537,144 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
 .data-table-wrapper {
   width: 100%;
   overflow-x: auto;
-  margin-top: 24px;
-  border: 1px solid var(--card-border);
-  border-radius: 8px;
 }
 .data-table {
   width: 100%;
   border-collapse: collapse;
   text-align: left;
-  font-size: 0.875rem;
 }
 .data-table th {
-  background: #f8fafc;
   padding: 12px 16px;
+  border-bottom: 2px solid var(--card-border);
   color: var(--text-secondary);
   font-weight: 600;
-  border-bottom: 1px solid var(--card-border);
+  font-size: 0.875rem;
 }
 .data-table td {
-  padding: 12px 16px;
+  padding: 16px;
   border-bottom: 1px solid var(--card-border);
   color: var(--text-primary);
+  font-size: 0.875rem;
   vertical-align: middle;
 }
-.data-table tr:last-child td {
-  border-bottom: none;
+.data-table tbody tr {
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
-.data-table tr:hover {
+.data-table tbody tr:hover {
+  background-color: #f8fafc;
+}
+.license-plate {
+  background-color: #fef08a;
+  color: #000;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-family: monospace;
+  letter-spacing: 1px;
+  border: 1px solid #ca8a04;
+}
+
+/* Incident Drawer (Side Panel) */
+.drawer-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(2px);
+  z-index: 1000;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+.incident-drawer {
+  position: fixed;
+  top: 0;
+  right: -500px;
+  width: 450px;
+  max-width: 90vw;
+  height: 100vh;
+  background: #ffffff;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+  transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+}
+.incident-drawer.open {
+  right: 0;
+}
+.drawer-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: #f8fafc;
+}
+.drawer-close-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text-secondary);
+  padding: 4px;
+  border-radius: 4px;
+}
+.drawer-close-btn:hover {
+  background: #e2e8f0;
+  color: var(--text-primary);
+}
+.drawer-body {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+.drawer-image-placeholder {
+  width: 100%;
+  height: 240px;
+  background: #0f172a;
+  border-radius: 8px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  position: relative;
+  overflow: hidden;
+}
+.drawer-section {
+  margin-bottom: 24px;
+}
+.drawer-section h4 {
+  margin: 0 0 12px 0;
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.drawer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.drawer-kv {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.drawer-kv .k {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+.drawer-kv .v {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
 }
 
 /* UI Specifics for Tables */

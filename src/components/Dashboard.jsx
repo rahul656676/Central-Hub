@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, AlertTriangle, CheckCircle, Sliders, Camera, Car, User, Box, Flame, Droplets, Download, Filter, Search, Activity, Video } from 'lucide-react';
+import { Calendar, AlertTriangle, CheckCircle, Sliders, Camera, Car, User, Box, Flame, Droplets, Download, Filter, Search, Activity, Video, X, FileText, Mail, Bell } from 'lucide-react';
 import { 
   LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, 
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
@@ -64,6 +64,145 @@ const TableToolbar = ({ title }) => (
   </div>
 );
 
+// INCIDENT DRAWER COMPONENT
+const IncidentDrawer = ({ incident, onClose }) => {
+  if (!incident) return null;
+
+  return (
+    <>
+      <div className="drawer-overlay" onClick={onClose}></div>
+      <div className={`incident-drawer ${incident ? 'open' : ''}`}>
+        <div className="drawer-header">
+          <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <FileText size={20} color="var(--accent-blue)" />
+            Incident Report
+          </h3>
+          <button className="drawer-close-btn" onClick={onClose}>
+            <X size={24} />
+          </button>
+        </div>
+        
+        <div className="drawer-body">
+          {/* Main Image Placeholder */}
+          <div className="drawer-image-placeholder">
+            <div style={{ textAlign: 'center' }}>
+              <Camera size={48} style={{ marginBottom: '16px', opacity: 0.5 }} />
+              <div style={{ fontSize: '0.875rem', fontWeight: 600 }}>High-Res Snapshot</div>
+              <div style={{ fontSize: '0.75rem', opacity: 0.7 }}>Camera Feed: {incident.camera || 'Main Gate'}</div>
+            </div>
+          </div>
+
+          <div className="drawer-section">
+            <h4>Event Details</h4>
+            <div className="drawer-grid">
+              <div className="drawer-kv">
+                <span className="k">Type</span>
+                <span className="v">{incident.type}</span>
+              </div>
+              <div className="drawer-kv">
+                <span className="k">Time</span>
+                <span className="v">{incident.time}</span>
+              </div>
+              <div className="drawer-kv">
+                <span className="k">Location</span>
+                <span className="v">{incident.location || 'N/A'}</span>
+              </div>
+              <div className="drawer-kv">
+                <span className="k">Confidence</span>
+                <span className="v" style={{ color: 'var(--success)' }}>{incident.confidence || '98%'}</span>
+              </div>
+            </div>
+          </div>
+
+          {incident.type === 'ANPR' && (
+            <div className="drawer-section">
+              <h4>Vehicle Intelligence</h4>
+              <div className="drawer-grid">
+                <div className="drawer-kv">
+                  <span className="k">License Plate</span>
+                  <span className="v"><span className="license-plate">{incident.plate}</span></span>
+                </div>
+                <div className="drawer-kv">
+                  <span className="k">Container ID</span>
+                  <span className="v">{incident.container || 'NONE'}</span>
+                </div>
+                <div className="drawer-kv">
+                  <span className="k">Registered Driver</span>
+                  <span className="v">{incident.driver || 'Unknown'}</span>
+                </div>
+                <div className="drawer-kv">
+                  <span className="k">Weighbridge Data</span>
+                  <span className="v">{incident.weight || 'Pending'}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {incident.type === 'PPE Violation' && (
+            <div className="drawer-section">
+              <h4>Worker Intelligence</h4>
+              <div className="drawer-grid">
+                <div className="drawer-kv">
+                  <span className="k">Violation</span>
+                  <span className="v" style={{ color: 'var(--danger)' }}>{incident.violation}</span>
+                </div>
+                <div className="drawer-kv">
+                  <span className="k">Facial ID Match</span>
+                  <span className="v">{incident.worker || 'EMP-0012'}</span>
+                </div>
+                <div className="drawer-kv">
+                  <span className="k">Supervisor</span>
+                  <span className="v">{incident.supervisor || 'Rajesh K.'}</span>
+                </div>
+                <div className="drawer-kv">
+                  <span className="k">History</span>
+                  <span className="v">2nd Offense this month</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {incident.type === 'Spillage' && (
+            <div className="drawer-section">
+              <h4>Spillage Intelligence</h4>
+              <div className="drawer-grid">
+                <div className="drawer-kv">
+                  <span className="k">Material Suspected</span>
+                  <span className="v">{incident.material}</span>
+                </div>
+                <div className="drawer-kv">
+                  <span className="k">Estimated Area</span>
+                  <span className="v">2.5 sq meters</span>
+                </div>
+                <div className="drawer-kv">
+                  <span className="k">Hazard Level</span>
+                  <span className="v" style={{ color: incident.hazard === 'High' ? 'var(--danger)' : 'var(--warning)' }}>{incident.hazard}</span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="drawer-section" style={{ marginTop: '40px' }}>
+            <h4 style={{ borderBottom: '1px solid var(--card-border)', paddingBottom: '8px' }}>Operator Actions</h4>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              <button className="action-btn" style={{ width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', gap: '8px', background: 'var(--danger)', color: 'white' }}>
+                <AlertTriangle size={16} /> Flag as Critical
+              </button>
+              <button className="action-btn" style={{ width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', gap: '8px' }}>
+                <Mail size={16} /> Email Supervisor Report
+              </button>
+              <button className="action-btn" style={{ width: '100%', padding: '12px', display: 'flex', justifyContent: 'center', gap: '8px', background: '#f8fafc', color: 'var(--text-primary)', border: '1px solid var(--card-border)' }}>
+                <Download size={16} /> Download Full Video Snippet
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </>
+  );
+};
+
 const ConfigurationView = () => {
   const [activeTab, setActiveTab] = useState('General');
   return (
@@ -117,6 +256,7 @@ const ConfigurationView = () => {
 
 const Dashboard = ({ activeSolution, activeLocationFilter }) => {
   const [currentDate, setCurrentDate] = useState('');
+  const [selectedIncident, setSelectedIncident] = useState(null);
 
   useEffect(() => {
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -125,6 +265,10 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
 
   const locHash = hashCode(activeLocationFilter);
   const m = activeLocationFilter === 'All Locations' ? 1 : 0.8 + (locHash % 70) / 100;
+
+  const handleRowClick = (incidentData) => {
+    setSelectedIncident(incidentData);
+  };
 
   const isSystemView = ['Configuration', 'Alert Rules', 'Reports', 'Fleet Admin'].includes(activeSolution);
   if (isSystemView) {
@@ -311,26 +455,26 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr onClick={() => handleRowClick({ type: 'PPE Violation', time: 'Today, 10:42 AM', camera: 'Gate 4 - Loading', location: 'Gate 4 - Loading', violation: 'No Helmet', worker: 'EMP-0892', supervisor: 'Rajesh K.' })}>
                       <td><Thumbnail icon={User} color="#ef4444" /></td>
                       <td>Today, 10:42 AM</td>
                       <td>Gate 4 - Loading</td>
                       <td><span style={{ color: '#ef4444', fontWeight: 600 }}>No Helmet</span></td>
-                      <td><button type="button" className="action-btn">Alert Supervisor</button></td>
+                      <td><button type="button" className="action-btn" onClick={(e) => e.stopPropagation()}>Alert Supervisor</button></td>
                     </tr>
-                    <tr>
+                    <tr onClick={() => handleRowClick({ type: 'PPE Violation', time: 'Today, 09:15 AM', camera: 'Area B - Processing', location: 'Area B - Processing', violation: 'No Vest', worker: 'EMP-1044', supervisor: 'Amit S.' })}>
                       <td><Thumbnail icon={User} color="#f59e0b" /></td>
                       <td>Today, 09:15 AM</td>
                       <td>Area B - Processing</td>
                       <td><span style={{ color: '#f59e0b', fontWeight: 600 }}>No Vest</span></td>
-                      <td><button type="button" className="action-btn">Alert Supervisor</button></td>
+                      <td><button type="button" className="action-btn" onClick={(e) => e.stopPropagation()}>Alert Supervisor</button></td>
                     </tr>
-                    <tr>
+                    <tr onClick={() => handleRowClick({ type: 'PPE Violation', time: 'Yesterday, 16:30 PM', camera: 'Gate 1 - Main', location: 'Gate 1 - Main', violation: 'No Helmet', worker: 'EMP-0211', supervisor: 'Sanjay M.' })}>
                       <td><Thumbnail icon={User} color="#ef4444" /></td>
                       <td>Yesterday, 16:30 PM</td>
                       <td>Gate 1 - Main</td>
                       <td><span style={{ color: '#ef4444', fontWeight: 600 }}>No Helmet</span></td>
-                      <td><button type="button" className="action-btn" style={{ background: '#e2e8f0' }}>Resolved</button></td>
+                      <td><button type="button" className="action-btn" style={{ background: '#e2e8f0' }} onClick={(e) => e.stopPropagation()}>Resolved</button></td>
                     </tr>
                   </tbody>
                 </table>
@@ -387,7 +531,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr onClick={() => handleRowClick({ type: 'ANPR', time: '14:02:15', location: 'Main Gate Inbound', camera: 'CAM-01', plate: 'T 123 ABC', container: 'MSKU 1928374', driver: 'Rahul Kumar (Auth)', weight: '14,250 kg' })}>
                       <td><Thumbnail icon={Car} color="#3b82f6" /></td>
                       <td><span className="license-plate">T 123 ABC</span></td>
                       <td>MSKU 1928374</td>
@@ -395,7 +539,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                       <td>-</td>
                       <td><span style={{ color: '#10b981', fontWeight: 600 }}>Matched</span></td>
                     </tr>
-                    <tr>
+                    <tr onClick={() => handleRowClick({ type: 'ANPR', time: '13:45:00', location: 'Gate 2 Outbound', camera: 'CAM-03', plate: 'T 987 XYZ', container: 'NONE', driver: 'Unknown Visitor', weight: '2,100 kg' })}>
                       <td><Thumbnail icon={Car} color="#3b82f6" /></td>
                       <td><span className="license-plate">T 987 XYZ</span></td>
                       <td>NONE</td>
@@ -403,7 +547,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                       <td>14:10:22</td>
                       <td><span style={{ color: '#64748b', fontWeight: 600 }}>Visitor</span></td>
                     </tr>
-                    <tr>
+                    <tr onClick={() => handleRowClick({ type: 'ANPR', time: '12:30:00', location: 'Gate 4 Cargo', camera: 'CAM-11', plate: 'T 444 DEF', container: 'CMAU 9991112', driver: 'Sandeep Singh', weight: 'ERROR' })}>
                       <td><Thumbnail icon={Car} color="#ef4444" /></td>
                       <td><span className="license-plate">T 444 DEF</span></td>
                       <td>CMAU 9991112</td>
@@ -609,21 +753,21 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr onClick={() => handleRowClick({ type: 'Spillage', time: '14:22:00', camera: 'CAM-12', location: 'Chemical Storage B', material: 'Hazardous Liquid (Acidic)', hazard: 'High' })}>
                       <td><Thumbnail icon={Droplets} color="#ef4444" /></td>
                       <td>Chemical Storage B</td>
                       <td><span style={{ color: '#ef4444', fontWeight: 600 }}>Hazardous Liquid</span></td>
                       <td>14:22:00</td>
                       <td><span style={{ color: '#f59e0b' }}>Pending</span></td>
-                      <td><button type="button" className="action-btn">Dispatch Cleaning Crew</button></td>
+                      <td><button type="button" className="action-btn" onClick={(e) => e.stopPropagation()}>Dispatch Cleaning Crew</button></td>
                     </tr>
-                    <tr>
+                    <tr onClick={() => handleRowClick({ type: 'Spillage', time: '09:15:00', camera: 'CAM-08', location: 'Forklift Pathway 2', material: 'Oil / Lubricant', hazard: 'Medium' })}>
                       <td><Thumbnail icon={Droplets} color="#f59e0b" /></td>
                       <td>Forklift Pathway 2</td>
                       <td>Oil / Lubricant</td>
                       <td>09:15:00</td>
                       <td>09:45:00</td>
-                      <td><button type="button" className="action-btn" style={{ background: '#e2e8f0' }}>Resolved</button></td>
+                      <td><button type="button" className="action-btn" style={{ background: '#e2e8f0' }} onClick={(e) => e.stopPropagation()}>Resolved</button></td>
                     </tr>
                   </tbody>
                 </table>
@@ -879,6 +1023,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
           {renderSolutionView()}
         </div>
       </div>
+
+      <IncidentDrawer incident={selectedIncident} onClose={() => setSelectedIncident(null)} />
     </div>
   );
 };
