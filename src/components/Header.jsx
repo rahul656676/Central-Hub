@@ -91,15 +91,29 @@ const Header = ({
       </div>
       
       <div className="header-actions">
-        {/* Role Switcher Mockup */}
-        <div style={{ display: 'flex', alignItems: 'center', background: '#f1f5f9', borderRadius: '20px', padding: '4px', fontSize: '0.75rem', fontWeight: 600, marginRight: '8px' }}>
+        {/* Role Switcher Mockup with Sliding Animation */}
+        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', background: '#e2e8f0', borderRadius: '24px', padding: '4px', fontSize: '0.75rem', fontWeight: 600, marginRight: '8px', width: '180px', height: '36px' }}>
+          {/* Sliding Pill */}
+          <div style={{
+            position: 'absolute',
+            top: '4px',
+            bottom: '4px',
+            left: userRole === 'HEAD_OFFICE' ? '4px' : '90px',
+            width: '86px',
+            background: 'white',
+            borderRadius: '20px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+            transition: 'left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+            zIndex: 1
+          }}></div>
+
           <button 
             type="button"
             onClick={() => {
               setUserRole('HEAD_OFFICE');
               setActiveLocationFilter('All Locations');
             }}
-            style={{ padding: '4px 12px', borderRadius: '16px', border: 'none', background: userRole === 'HEAD_OFFICE' ? 'white' : 'transparent', color: userRole === 'HEAD_OFFICE' ? 'var(--accent-blue)' : 'var(--text-secondary)', boxShadow: userRole === 'HEAD_OFFICE' ? 'var(--shadow-sm)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}
+            style={{ flex: 1, zIndex: 2, padding: '6px 0', border: 'none', background: 'transparent', color: userRole === 'HEAD_OFFICE' ? 'var(--accent-blue)' : '#64748b', cursor: 'pointer', transition: 'color 0.3s', textAlign: 'center' }}
           >
             Central
           </button>
@@ -109,7 +123,7 @@ const Header = ({
               setUserRole('LOCAL_SITE');
               setActiveLocationFilter('Lugoba');
             }}
-            style={{ padding: '4px 12px', borderRadius: '16px', border: 'none', background: userRole === 'LOCAL_SITE' ? 'white' : 'transparent', color: userRole === 'LOCAL_SITE' ? 'var(--accent-blue)' : 'var(--text-secondary)', boxShadow: userRole === 'LOCAL_SITE' ? 'var(--shadow-sm)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}
+            style={{ flex: 1, zIndex: 2, padding: '6px 0', border: 'none', background: 'transparent', color: userRole === 'LOCAL_SITE' ? 'var(--accent-blue)' : '#64748b', cursor: 'pointer', transition: 'color 0.3s', textAlign: 'center' }}
           >
             Local Site
           </button>
