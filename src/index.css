@@ -768,15 +768,20 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
   .main-content {
     margin-left: 0;
   }
-  .header {
+  .top-header {
     height: auto;
-    padding: 12px 20px;
+    min-height: 70px;
+    padding: 12px 16px;
     flex-wrap: wrap;
     gap: 12px;
+  }
+  .header-search {
+    display: none;
   }
   .header-actions {
     width: 100%;
     justify-content: space-between;
+    margin-top: 8px;
   }
   .header-actions .icon-btn[title="Toggle Fullscreen"] {
     display: none;
@@ -812,9 +817,7 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
   .card {
     padding: 16px;
   }
-  .top-header {
-    padding: 0 16px;
-  }
+
   .table-toolbar {
     flex-direction: column;
     align-items: flex-start;
