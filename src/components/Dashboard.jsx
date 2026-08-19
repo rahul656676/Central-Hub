@@ -307,11 +307,11 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                   </div>
                   <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
                     <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>CAM-04: Assembly Area (PPE)</div>
-                    <img src="https://images.unsplash.com/photo-1504917595217-d4bfd27eb278?auto=format&fit=crop&w=400&q=80" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
+                    <img src="/cam4.png" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
                   </div>
                   <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
                     <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>CAM-09: Perimeter Fence</div>
-                    <img src="https://images.unsplash.com/photo-1502672260266-1c1c24240f38?auto=format&fit=crop&w=400&q=80" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
+                    <img src="/cam9.png" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
                   </div>
                   <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
                     <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>CAM-12: Chemical Depot</div>
