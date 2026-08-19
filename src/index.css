@@ -768,7 +768,20 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
   .main-content {
     margin-left: 0;
   }
+  .header {
+    height: auto;
+    padding: 12px 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
   .header-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .header-actions .icon-btn[title="Toggle Fullscreen"] {
+    display: none;
+  }
+  .header-actions .user-profile {
     display: none;
   }
   .dashboard-grid {
