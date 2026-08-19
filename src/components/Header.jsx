@@ -91,62 +91,65 @@ const Header = ({
       </div>
       
       <div className="header-actions">
-        {/* Role Switcher Mockup with Sliding Animation */}
-        <div style={{ position: 'relative', display: 'flex', alignItems: 'center', background: '#e2e8f0', borderRadius: '24px', padding: '4px', fontSize: '0.75rem', fontWeight: 600, marginRight: '8px', width: '180px', height: '36px' }}>
-          {/* Sliding Pill */}
-          <div style={{
-            position: 'absolute',
-            top: '4px',
-            bottom: '4px',
-            left: userRole === 'HEAD_OFFICE' ? '4px' : '90px',
-            width: '86px',
-            background: 'white',
-            borderRadius: '20px',
-            boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
-            transition: 'left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
-            zIndex: 1
-          }}></div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+          {/* Role Switcher Mockup with Sliding Animation */}
+          <div style={{ position: 'relative', display: 'flex', alignItems: 'center', background: '#e2e8f0', borderRadius: '24px', padding: '4px', fontSize: '0.75rem', fontWeight: 600, width: '180px', height: '36px', flexShrink: 0 }}>
+            {/* Sliding Pill */}
+            <div style={{
+              position: 'absolute',
+              top: '4px',
+              bottom: '4px',
+              left: userRole === 'HEAD_OFFICE' ? '4px' : '90px',
+              width: '86px',
+              background: 'white',
+              borderRadius: '20px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+              transition: 'left 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              zIndex: 1
+            }}></div>
 
-          <button 
-            type="button"
-            onClick={() => {
-              setUserRole('HEAD_OFFICE');
-              setActiveLocationFilter('All Locations');
-            }}
-            style={{ flex: 1, zIndex: 2, padding: '6px 0', border: 'none', background: 'transparent', color: userRole === 'HEAD_OFFICE' ? 'var(--accent-blue)' : '#64748b', cursor: 'pointer', transition: 'color 0.3s', textAlign: 'center' }}
-          >
-            Central
-          </button>
-          <button 
-            type="button"
-            onClick={() => {
-              setUserRole('LOCAL_SITE');
-              setActiveLocationFilter('Lugoba');
-            }}
-            style={{ flex: 1, zIndex: 2, padding: '6px 0', border: 'none', background: 'transparent', color: userRole === 'LOCAL_SITE' ? 'var(--accent-blue)' : '#64748b', cursor: 'pointer', transition: 'color 0.3s', textAlign: 'center' }}
-          >
-            Local Site
-          </button>
-        </div>
-
-        {/* Location Filter */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <MapPin size={18} color="var(--accent-blue)" />
-          {userRole === 'HEAD_OFFICE' ? (
-            <select 
-              className="location-dropdown"
-              value={activeLocationFilter}
-              onChange={(e) => setActiveLocationFilter(e.target.value)}
+            <button 
+              type="button"
+              onClick={() => {
+                setUserRole('HEAD_OFFICE');
+                setActiveLocationFilter('All Locations');
+              }}
+              style={{ flex: 1, zIndex: 2, padding: '6px 0', border: 'none', background: 'transparent', color: userRole === 'HEAD_OFFICE' ? 'var(--accent-blue)' : '#64748b', cursor: 'pointer', transition: 'color 0.3s', textAlign: 'center' }}
             >
-              {locations.map(loc => (
-                <option key={loc} value={loc}>{loc}</option>
-              ))}
-            </select>
-          ) : (
-            <div className="location-dropdown" style={{ background: '#f8fafc', color: 'var(--text-muted)', cursor: 'not-allowed' }}>
-              Lugoba (Local Mode)
-            </div>
-          )}
+              Central
+            </button>
+            <button 
+              type="button"
+              onClick={() => {
+                setUserRole('LOCAL_SITE');
+                setActiveLocationFilter('Lugoba');
+              }}
+              style={{ flex: 1, zIndex: 2, padding: '6px 0', border: 'none', background: 'transparent', color: userRole === 'LOCAL_SITE' ? 'var(--accent-blue)' : '#64748b', cursor: 'pointer', transition: 'color 0.3s', textAlign: 'center' }}
+            >
+              Local Site
+            </button>
+          </div>
+
+          {/* Location Filter */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+            <MapPin size={18} color="var(--accent-blue)" />
+            {userRole === 'HEAD_OFFICE' ? (
+              <select 
+                className="location-dropdown"
+                value={activeLocationFilter}
+                onChange={(e) => setActiveLocationFilter(e.target.value)}
+                style={{ padding: '6px 12px', borderRadius: '8px', border: '1px solid var(--card-border)', background: 'white', color: 'var(--text-primary)', outline: 'none', cursor: 'pointer', fontSize: '0.875rem' }}
+              >
+                {locations.map(loc => (
+                  <option key={loc} value={loc}>{loc}</option>
+                ))}
+              </select>
+            ) : (
+              <div style={{ padding: '6px 12px', borderRadius: '8px', background: '#f8fafc', color: 'var(--text-muted)', border: '1px solid #e2e8f0', fontSize: '0.875rem', cursor: 'not-allowed' }}>
+                Lugoba (Local Mode)
+              </div>
+            )}
+          </div>
         </div>
 
         <button type="button" className="icon-btn" onClick={toggleFullscreen} title="Toggle Fullscreen">
