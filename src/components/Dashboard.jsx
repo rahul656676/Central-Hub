@@ -211,58 +211,10 @@ const IncidentDrawer = ({ incident, onClose }) => {
   );
 };
 
-const ConfigurationView = () => {
-  const [activeTab, setActiveTab] = useState('General');
-  return (
-    <div className="card full-width-card animate-fade-in" style={{ padding: '0', overflow: 'hidden' }}>
-      <div style={{ padding: '24px', borderBottom: '1px solid var(--card-border)', display: 'flex', alignItems: 'center', gap: '16px' }}>
-        <Sliders size={28} color="var(--accent-blue)" />
-        <div>
-          <h2 style={{ margin: 0, color: 'var(--text-primary)' }}>System Configuration</h2>
-          <p style={{ color: 'var(--text-secondary)', margin: '4px 0 0 0', fontSize: '0.875rem' }}>
-            Adjust global settings, manage user access, and configure API integrations.
-          </p>
-        </div>
-      </div>
-      
-      <div style={{ display: 'flex', borderBottom: '1px solid var(--card-border)', background: '#f8fafc' }}>
-        {['General', 'User Roles', 'Camera Feeds'].map(tab => (
-          <button 
-            type="button"
-            key={tab}
-            onClick={(e) => { e.preventDefault(); setActiveTab(tab); }}
-            style={{ 
-              flex: 1, padding: '16px', background: activeTab === tab ? '#ffffff' : 'transparent',
-              border: 'none', borderBottom: activeTab === tab ? '2px solid var(--accent-blue)' : '2px solid transparent',
-              color: activeTab === tab ? 'var(--accent-blue)' : 'var(--text-secondary)',
-              cursor: 'pointer', fontWeight: activeTab === tab ? '600' : '400', transition: 'all 0.2s'
-            }}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
+import ConfigurationView from './ConfigurationView';
+import HealthMonitorView from './HealthMonitorView';
 
-      <div style={{ padding: '32px', minHeight: '300px', background: '#ffffff' }}>
-        {activeTab === 'General' && (
-          <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '24px', textAlign: 'left', maxWidth: '600px' }}>
-            <div>
-              <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>System Name</label>
-              <input type="text" defaultValue="Lake Group Central Hub" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)' }} />
-            </div>
-            <div>
-              <button type="button" onClick={(e) => e.preventDefault()} style={{ padding: '10px 24px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>Save Changes</button>
-            </div>
-          </div>
-        )}
-        {activeTab === 'User Roles' && <div className="animate-fade-in" style={{ color: 'var(--text-secondary)' }}>User roles management interface.</div>}
-        {activeTab === 'Camera Feeds' && <div className="animate-fade-in" style={{ color: 'var(--text-secondary)' }}>RTSP stream configuration interface.</div>}
-      </div>
-    </div>
-  );
-};
-
-const Dashboard = ({ activeSolution, activeLocationFilter }) => {
+const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName, userRole }) => {
   const [currentDate, setCurrentDate] = useState('');
   const [selectedIncident, setSelectedIncident] = useState(null);
 
@@ -278,7 +230,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
     setSelectedIncident(incidentData);
   };
 
-  const isSystemView = ['Configuration', 'Alert Rules', 'Reports', 'Fleet Admin'].includes(activeSolution);
+  const isSystemView = ['Configuration', 'Alert Rules', 'Reports', 'Health Monitor'].includes(activeSolution);
   if (isSystemView) {
     return (
       <div className="dashboard-area animate-fade-in">
@@ -290,7 +242,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
         </div>
         <div className="dashboard-grid">
           {activeSolution === 'Configuration' && <ConfigurationView />}
-          {activeSolution !== 'Configuration' && (
+          {activeSolution === 'Health Monitor' && <HealthMonitorView />}
+          {activeSolution !== 'Configuration' && activeSolution !== 'Health Monitor' && (
             <div className="card full-width-card" style={{ textAlign: 'center', padding: '60px' }}>
               <h2 style={{ color: 'var(--text-secondary)' }}>{activeSolution} View</h2>
               <p style={{ color: 'var(--text-muted)' }}>Advanced configuration module goes here.</p>
@@ -412,6 +365,33 @@ const Dashboard = ({ activeSolution, activeLocationFilter }) => {
                 </div>
               </div>
             </div>
+
+            {/* Cross-Site Comparisons (HQ Only) */}
+            {userRole === 'HEAD_OFFICE' && activeLocationFilter === 'All Locations' && (
+              <div className="card full-width-card" style={{ marginTop: '24px' }}>
+                <h3 style={{ marginBottom: '20px' }}>Cross-Site Alerts Comparison (Last 7 Days)</h3>
+                <div style={{ height: '300px' }}>
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart data={[
+                      { site: 'Premix', ppe: 45, loitering: 20, anpr: 12 },
+                      { site: 'Lugoba', ppe: 85, loitering: 45, anpr: 32 },
+                      { site: 'Container Depot', ppe: 25, loitering: 10, anpr: 65 },
+                      { site: 'Impala', ppe: 30, loitering: 15, anpr: 8 },
+                      { site: 'AILL', ppe: 60, loitering: 35, anpr: 20 },
+                    ]} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                      <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
+                      <XAxis dataKey="site" stroke="#94a3b8" />
+                      <YAxis stroke="#94a3b8" />
+                      <Tooltip content={<CustomTooltip />} />
+                      <Legend />
+                      <Bar dataKey="ppe" name="PPE Violations" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="loitering" name="Loitering Alerts" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                      <Bar dataKey="anpr" name="ANPR Mismatches" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+                    </BarChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+            )}
           </>
         );
         

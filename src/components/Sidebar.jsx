@@ -22,7 +22,7 @@ const Sidebar = ({ isOpen, activeSolution, setActiveSolution, closeSidebar }) =>
     { name: 'Configuration', icon: <Settings size={18} /> },
     { name: 'Alert Rules', icon: <AlertTriangle size={18} /> },
     { name: 'Reports', icon: <FileText size={18} /> },
-    { name: 'Fleet Admin', icon: <Truck size={18} /> }
+    { name: 'Health Monitor', icon: <Activity size={18} /> }
   ];
 
   return (

@@ -5,7 +5,8 @@ const Header = ({
   toggleSidebar, 
   searchQuery, setSearchQuery, 
   userName, setUserName, 
-  activeLocationFilter, setActiveLocationFilter 
+  activeLocationFilter, setActiveLocationFilter,
+  userRole, setUserRole
 }) => {
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
@@ -90,18 +91,48 @@ const Header = ({
       </div>
       
       <div className="header-actions">
+        {/* Role Switcher Mockup */}
+        <div style={{ display: 'flex', alignItems: 'center', background: '#f1f5f9', borderRadius: '20px', padding: '4px', fontSize: '0.75rem', fontWeight: 600, marginRight: '8px' }}>
+          <button 
+            type="button"
+            onClick={() => {
+              setUserRole('HEAD_OFFICE');
+              setActiveLocationFilter('All Locations');
+            }}
+            style={{ padding: '4px 12px', borderRadius: '16px', border: 'none', background: userRole === 'HEAD_OFFICE' ? 'white' : 'transparent', color: userRole === 'HEAD_OFFICE' ? 'var(--accent-blue)' : 'var(--text-secondary)', boxShadow: userRole === 'HEAD_OFFICE' ? 'var(--shadow-sm)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}
+          >
+            Central
+          </button>
+          <button 
+            type="button"
+            onClick={() => {
+              setUserRole('LOCAL_SITE');
+              setActiveLocationFilter('Lugoba');
+            }}
+            style={{ padding: '4px 12px', borderRadius: '16px', border: 'none', background: userRole === 'LOCAL_SITE' ? 'white' : 'transparent', color: userRole === 'LOCAL_SITE' ? 'var(--accent-blue)' : 'var(--text-secondary)', boxShadow: userRole === 'LOCAL_SITE' ? 'var(--shadow-sm)' : 'none', cursor: 'pointer', transition: 'all 0.2s' }}
+          >
+            Local Site
+          </button>
+        </div>
+
         {/* Location Filter */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <MapPin size={18} color="var(--accent-blue)" />
-          <select 
-            className="location-dropdown"
-            value={activeLocationFilter}
-            onChange={(e) => setActiveLocationFilter(e.target.value)}
-          >
-            {locations.map(loc => (
-              <option key={loc} value={loc}>{loc}</option>
-            ))}
-          </select>
+          {userRole === 'HEAD_OFFICE' ? (
+            <select 
+              className="location-dropdown"
+              value={activeLocationFilter}
+              onChange={(e) => setActiveLocationFilter(e.target.value)}
+            >
+              {locations.map(loc => (
+                <option key={loc} value={loc}>{loc}</option>
+              ))}
+            </select>
+          ) : (
+            <div className="location-dropdown" style={{ background: '#f8fafc', color: 'var(--text-muted)', cursor: 'not-allowed' }}>
+              Lugoba (Local Mode)
+            </div>
+          )}
         </div>
 
         <button type="button" className="icon-btn" onClick={toggleFullscreen} title="Toggle Fullscreen">

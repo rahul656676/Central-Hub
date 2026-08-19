@@ -11,6 +11,7 @@ function App() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
   const [searchQuery, setSearchQuery] = useState('');
   const [userName, setUserName] = useState('Rahul Jangir');
+  const [userRole, setUserRole] = useState('HEAD_OFFICE'); // 'HEAD_OFFICE' or 'LOCAL_SITE'
 
   useEffect(() => {
     const handleResize = () => {
@@ -58,12 +59,15 @@ function App() {
           setUserName={setUserName}
           activeLocationFilter={activeLocationFilter}
           setActiveLocationFilter={setActiveLocationFilter}
+          userRole={userRole}
+          setUserRole={setUserRole}
         />
         <Dashboard 
           activeSolution={activeSolution} 
           activeLocationFilter={activeLocationFilter}
           searchQuery={searchQuery} 
           userName={userName}
+          userRole={userRole}
         />
       </main>
     </div>
