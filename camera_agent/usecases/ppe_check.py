@@ -3,10 +3,10 @@ from typing import Any, Dict, List
 from .base import UseCasePlugin
 
 class PPECheckPlugin(UseCasePlugin):
-    \"\"\"
+    """
     Phase 1: PPE Monitoring Use Case
     Detects if personnel are wearing hard hats and high-vis vests.
-    \"\"\"
+    """
     
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)

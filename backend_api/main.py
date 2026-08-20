@@ -1,9 +1,14 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from routers import alerts
 
 app = FastAPI(title="Central Hub - Backend API", version="1.0.0")
 
-# Allow dashboard to connect
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -12,10 +17,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(alerts.router)
+
 @app.get("/")
 def read_root():
     return {"status": "ok", "service": "Central Hub Backend API"}
-
-@app.get("/health")
-def health_check():
-    return {"status": "healthy"}
