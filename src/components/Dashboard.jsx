@@ -4,6 +4,7 @@ import {
   LineChart, Line, AreaChart, Area, BarChart, Bar, PieChart, Pie, Cell, 
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
 } from 'recharts';
+import { useAlerts } from '../api/useAlerts';
 
 // Simple deterministic hash for consistent random numbers per location
 const hashCode = (str) => {
@@ -217,6 +218,7 @@ import HealthMonitorView from './HealthMonitorView';
 const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName, userRole }) => {
   const [currentDate, setCurrentDate] = useState('');
   const [selectedIncident, setSelectedIncident] = useState(null);
+  const { alerts: backendAlerts, loading: alertsLoading } = useAlerts(activeLocationFilter);
 
   useEffect(() => {
     const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -675,39 +677,63 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
             </div>
 
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '32px' }}>
-              <h3 style={{ color: 'var(--text-primary)', margin: 0 }}>Active Loitering Threats</h3>
+              <h3 style={{ color: 'var(--text-primary)', margin: 0 }}>Active Threats & Alerts {alertsLoading ? '(Syncing...)' : ''}</h3>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <span className="status-dot alert"></span> <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Live Monitoring</span>
               </div>
             </div>
             
             <div className="data-grid">
-              <div className="data-grid-card">
-                <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-                  <Thumbnail icon={User} color="#ef4444" />
-                  <div>
-                    <div style={{ fontWeight: 600 }}>Perimeter Fence - North</div>
-                    <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Detected 10 mins ago</div>
+              {backendAlerts && backendAlerts.length > 0 ? (
+                backendAlerts.map(alert => (
+                  <div key={alert.id} className="data-grid-card">
+                    <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+                      <Thumbnail icon={alert.usecase.includes('ppe') ? User : AlertTriangle} color={alert.severity === 'high' ? '#ef4444' : '#f59e0b'} />
+                      <div>
+                        <div style={{ fontWeight: 600 }}>{alert.camera_id}</div>
+                        <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>
+                          {new Date(alert.timestamp).toLocaleTimeString()} - {alert.site_id}
+                        </div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ color: alert.severity === 'high' ? '#ef4444' : '#f59e0b', fontWeight: 600, fontSize: '0.875rem' }}>
+                        {alert.description}
+                      </div>
+                      <button type="button" className="action-btn">Review Feed</button>
+                    </div>
                   </div>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ color: '#ef4444', fontWeight: 600 }}>Dwell: 14 mins</div>
-                  <button type="button" className="action-btn">Dispatch Guard</button>
-                </div>
-              </div>
-              <div className="data-grid-card">
-                <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-                  <Thumbnail icon={User} color="#f59e0b" />
-                  <div>
-                    <div style={{ fontWeight: 600 }}>Loading Bay C</div>
-                    <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Detected 5 mins ago</div>
+                ))
+              ) : (
+                <>
+                  <div className="data-grid-card">
+                    <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+                      <Thumbnail icon={User} color="#ef4444" />
+                      <div>
+                        <div style={{ fontWeight: 600 }}>Perimeter Fence - North</div>
+                        <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Detected 10 mins ago</div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ color: '#ef4444', fontWeight: 600 }}>Dwell: 14 mins</div>
+                      <button type="button" className="action-btn">Dispatch Guard</button>
+                    </div>
                   </div>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <div style={{ color: '#f59e0b', fontWeight: 600 }}>Dwell: 6 mins</div>
-                  <button type="button" className="action-btn">Review Feed</button>
-                </div>
-              </div>
+                  <div className="data-grid-card">
+                    <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
+                      <Thumbnail icon={User} color="#f59e0b" />
+                      <div>
+                        <div style={{ fontWeight: 600 }}>Loading Bay C</div>
+                        <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Detected 5 mins ago</div>
+                      </div>
+                    </div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <div style={{ color: '#f59e0b', fontWeight: 600 }}>Dwell: 6 mins</div>
+                      <button type="button" className="action-btn">Review Feed</button>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
           </>
         );
