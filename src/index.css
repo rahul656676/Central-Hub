@@ -143,7 +143,7 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
 
 /* Header */
 .top-header {
-  height: 70px;
+  height: auto;
   min-height: 70px;
   padding: 0 32px;
   display: flex;
