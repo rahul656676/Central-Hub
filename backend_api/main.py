@@ -6,6 +6,12 @@ import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
 from routers import alerts
+from database import engine
+from models.base import Base
+from models import alerts as alerts_model
+
+# Create tables if they don't exist
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Central Hub - Backend API", version="1.0.0")
 
