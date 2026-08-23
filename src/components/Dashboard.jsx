@@ -919,21 +919,21 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr onClick={() => handleRowClick({ type: 'Productivity Insight', camera: 'Assembly Line 1', location: 'Assembly Line 1', violation: 'Active', time: 'Live', worker: '12 Workers Present', supervisor: 'John D.' })}>
                       <td>Assembly Line 1</td>
                       <td><span className="status-dot live"></span><span style={{ color: '#10b981', fontWeight: 600 }}>Active</span></td>
                       <td>-</td>
                       <td>12</td>
                       <td>John D.</td>
                     </tr>
-                    <tr>
+                    <tr onClick={() => handleRowClick({ type: 'Productivity Insight', camera: 'Loading Bay', location: 'Loading Bay', violation: 'Extended Idle Time', time: 'Idle for 45 mins', worker: '3 Workers Present', supervisor: 'Sarah K.' })}>
                       <td>Loading Bay</td>
                       <td><span className="status-dot alert"></span><span style={{ color: '#94a3b8', fontWeight: 600 }}>Idle</span></td>
                       <td><span style={{ color: '#ef4444' }}>45 mins</span></td>
                       <td>3</td>
                       <td>Sarah K.</td>
                     </tr>
-                    <tr>
+                    <tr onClick={() => handleRowClick({ type: 'Productivity Insight', camera: 'Packaging Area', location: 'Packaging Area', violation: 'Active', time: 'Live', worker: '8 Workers Present', supervisor: 'Mike R.' })}>
                       <td>Packaging Area</td>
                       <td><span className="status-dot live"></span><span style={{ color: '#10b981', fontWeight: 600 }}>Active</span></td>
                       <td>-</td>
