@@ -63,15 +63,36 @@ class CameraAgent:
                 detections = self.detector.detect(frame)
                 
                 # 2. Pass detections to each active use case plugin
+                all_alerts = []
+                roi_to_draw = None
                 for uc_name, plugin in self.active_plugins:
                     alerts = plugin.process_frame(frame, detections)
+                    all_alerts.extend(alerts)
+                    
+                    # Grab ROI for visualization if it's the PPE plugin
+                    if hasattr(plugin, 'roi_polygon'):
+                        roi_to_draw = plugin.roi_polygon
                     
                     # 3. Dispatch any generated alerts
                     for alert in alerts:
                         self.dispatcher.dispatch(self.camera_id, uc_name, alert)
                         
+                # 4. Visualize and Display
+                try:
+                    from core.visualizer import Visualizer
+                    import cv2
+                    vis = Visualizer()
+                    vis_frame = vis.draw(frame, detections, all_alerts, roi_to_draw)
+                    
+                    cv2.imshow(f"Camera Agent - {self.camera_id}", vis_frame)
+                    if cv2.waitKey(1) & 0xFF == ord('q'):
+                        print("User quit visualizer.")
+                        break
+                except ImportError:
+                    pass # OpenCV or Visualizer not available, run headless
+                        
                 # Sleep to simulate FPS throttle
-                time.sleep(0.5)
+                time.sleep(0.1)
                 
         except KeyboardInterrupt:
             print(f"[{self.camera_id}] Agent stopped.")
