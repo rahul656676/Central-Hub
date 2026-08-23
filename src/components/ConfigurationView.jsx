@@ -1,10 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Sliders, CheckCircle, Video, MapPin, Upload } from 'lucide-react';
 import RoiCanvas from './RoiCanvas';
+import { saveUseCaseConfig } from '../api/useConfig';
 
 const ConfigurationView = () => {
   const [activeTab, setActiveTab] = useState('Sites');
   const [useCaseConfig, setUseCaseConfig] = useState(false);
+  const roiDataRef = useRef(null);
+  
+  const handleSave = async () => {
+    try {
+      await saveUseCaseConfig({
+        camera_id: "cam_loading_bay_01",
+        usecase_name: useCaseConfig,
+        settings: {
+          roi: roiDataRef.current
+        }
+      });
+      alert('Configuration saved to database!');
+      setUseCaseConfig(false);
+    } catch (err) {
+      alert('Failed to save. Is the backend running?');
+    }
+  };
 
   return (
     <div className="card full-width-card animate-fade-in" style={{ padding: '0', overflow: 'hidden' }}>
@@ -150,7 +168,7 @@ const ConfigurationView = () => {
                 <h4 style={{ margin: '0 0 12px 0', color: 'var(--text-secondary)' }}>Region of Interest (ROI)</h4>
                 <p style={{ fontSize: '0.875rem', color: 'var(--text-muted)', marginBottom: '16px' }}>Draw a polygon on the live frame to restrict where the AI analyzes footage.</p>
                 
-                <RoiCanvas onSave={(data) => console.log('Saved ROI:', data)} />
+                <RoiCanvas onSave={(data) => { roiDataRef.current = data; }} />
               </div>
               
               <div style={{ flex: 1, minWidth: '300px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -180,7 +198,7 @@ const ConfigurationView = () => {
                 )}
 
                 <div style={{ marginTop: '16px' }}>
-                  <button type="button" onClick={() => setUseCaseConfig(false)} style={{ padding: '10px 24px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>Save Configuration</button>
+                  <button type="button" onClick={handleSave} style={{ padding: '10px 24px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>Save Configuration</button>
                 </div>
               </div>
             </div>
