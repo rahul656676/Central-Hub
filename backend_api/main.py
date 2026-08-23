@@ -5,10 +5,15 @@ import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from routers import alerts
+from routers import alerts, sites, cameras, usecases
 from database import engine
 from models.base import Base
+
+# Import all models to ensure they are registered with Base
 from models import alerts as alerts_model
+from models import sites as sites_model
+from models import cameras as cameras_model
+from models import usecases as usecases_model
 
 # Create tables if they don't exist
 Base.metadata.create_all(bind=engine)
@@ -24,6 +29,9 @@ app.add_middleware(
 )
 
 app.include_router(alerts.router)
+app.include_router(sites.router)
+app.include_router(cameras.router)
+app.include_router(usecases.router)
 
 @app.get("/")
 def read_root():
