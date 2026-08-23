@@ -10,12 +10,20 @@ const RoiCanvas = ({ imageUrl, onSave, initialPoints = [] }) => {
   const containerRef = useRef(null);
 
   useEffect(() => {
+    const observer = new ResizeObserver(entries => {
+      if (entries[0]) {
+        setContainerSize({
+          width: entries[0].contentRect.width,
+          height: 400
+        });
+      }
+    });
+    
     if (containerRef.current) {
-      setContainerSize({
-        width: containerRef.current.offsetWidth,
-        height: 400
-      });
+      observer.observe(containerRef.current);
     }
+    
+    return () => observer.disconnect();
   }, []);
 
   const handleStageClick = (e) => {
@@ -35,6 +43,8 @@ const RoiCanvas = ({ imageUrl, onSave, initialPoints = [] }) => {
   const handleFinish = () => {
     if (points.length >= 6) { // at least 3 points
       setIsFinished(true);
+      // Automatically pass data to parent when finished drawing
+      handleSaveClick(true);
     }
   };
 
@@ -43,17 +53,21 @@ const RoiCanvas = ({ imageUrl, onSave, initialPoints = [] }) => {
     setIsFinished(false);
   };
 
-  const handleSaveClick = () => {
+  const handleSaveClick = (silent = false) => {
     if (onSave) {
-      const pairedPoints = [];
+      const normalizedPoints = [];
       for (let i = 0; i < points.length; i += 2) {
-        pairedPoints.push([Math.round(points[i]), Math.round(points[i + 1])]);
+        // Output as relative percentages (0.0 to 1.0) instead of absolute pixels!
+        normalizedPoints.push({
+          x: points[i] / containerSize.width,
+          y: points[i + 1] / containerSize.height
+        });
       }
-      onSave({
-        points: pairedPoints,
-        frame_width: containerSize.width,
-        frame_height: containerSize.height
-      });
+      onSave(normalizedPoints);
+      if (!silent) {
+        // Just for user feedback if they click a dedicated save button
+        console.log("Exported normalized ROI:", normalizedPoints);
+      }
     }
   };
 

@@ -1,5 +1,6 @@
 import time
 import random
+import numpy as np
 
 class RTSPStream:
     """
@@ -20,5 +21,5 @@ class RTSPStream:
     def get_frame(self):
         if not self.connected:
             return None
-        # Return a mock frame (e.g., a blank image or numpy array)
-        return "mock_frame_data"
+        # Return a mock blank 1080p frame (numpy array)
+        return np.zeros((1080, 1920, 3), dtype=np.uint8)

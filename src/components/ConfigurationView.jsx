@@ -7,6 +7,12 @@ const ConfigurationView = () => {
   const [activeTab, setActiveTab] = useState('Sites');
   const [useCaseConfig, setUseCaseConfig] = useState(false);
   const roiDataRef = useRef(null);
+  const [toast, setToast] = useState(null);
+  
+  const showToast = (message, type = 'success') => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 3000);
+  };
   
   const handleSave = async () => {
     try {
@@ -17,10 +23,10 @@ const ConfigurationView = () => {
           roi: roiDataRef.current
         }
       });
-      alert('Configuration saved to database!');
+      showToast('Configuration successfully saved to database!');
       setUseCaseConfig(false);
     } catch (err) {
-      alert('Failed to save. Is the backend running?');
+      showToast('Failed to save. Is the backend running?', 'error');
     }
   };
 
@@ -205,6 +211,22 @@ const ConfigurationView = () => {
           </div>
         )}
 
+        {toast && (
+          <div style={{
+            position: 'fixed',
+            bottom: '24px',
+            right: '24px',
+            background: toast.type === 'error' ? '#ef4444' : '#10b981',
+            color: 'white',
+            padding: '12px 24px',
+            borderRadius: '8px',
+            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+            zIndex: 9999,
+            animation: 'fadeIn 0.3s ease'
+          }}>
+            {toast.message}
+          </div>
+        )}
       </div>
     </div>
   );

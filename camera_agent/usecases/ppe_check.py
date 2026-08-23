@@ -4,10 +4,10 @@ from typing import Any, Dict, List
 from .base import UseCasePlugin
 
 class PPECheckPlugin(UseCasePlugin):
-    \"\"\"
+    """
     Phase 1: PPE Monitoring Use Case
     Detects if personnel are wearing hard hats and high-vis vests.
-    \"\"\"
+    """
     
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
@@ -15,16 +15,27 @@ class PPECheckPlugin(UseCasePlugin):
         self.require_vest = config.get('require_vest', True)
         
         # Parse ROI from frontend if available
-        # ROI comes as [{"x": 100, "y": 100}, {"x": 200, "y": 100}, ...]
-        raw_roi = config.get('roi', [])
+        # ROI comes as [{"x": 0.5, "y": 0.5}, ...] (Normalized 0.0-1.0)
+        self.raw_roi = config.get('roi', [])
         self.roi_polygon = None
-        if raw_roi and len(raw_roi) >= 3:
-            pts = [[int(pt['x']), int(pt['y'])] for pt in raw_roi]
-            self.roi_polygon = np.array(pts, np.int32).reshape((-1, 1, 2))
+        self.frame_shape = None
             
-        print(f"Initialized PPE Check Plugin. ROI configured: {self.roi_polygon is not None}")
+        print(f"Initialized PPE Check Plugin. ROI configured: {len(self.raw_roi) >= 3}")
 
-    def is_in_roi(self, bbox: list) -> bool:
+    def _update_roi_polygon(self, frame_shape):
+        """Scales normalized coordinates to actual frame pixels."""
+        if not self.raw_roi or len(self.raw_roi) < 3:
+            return
+        
+        h, w = frame_shape[:2]
+        pts = [[int(float(pt['x']) * w), int(float(pt['y']) * h)] for pt in self.raw_roi]
+        self.roi_polygon = np.array(pts, np.int32).reshape((-1, 1, 2))
+        self.frame_shape = frame_shape
+
+    def is_in_roi(self, bbox: list, frame_shape) -> bool:
+        if self.frame_shape != frame_shape:
+            self._update_roi_polygon(frame_shape)
+            
         if self.roi_polygon is None:
             return True # No ROI means analyze everywhere
             
@@ -44,7 +55,7 @@ class PPECheckPlugin(UseCasePlugin):
                 bbox = det.get('bbox', [0,0,0,0])
                 
                 # Filter out detections outside the user's drawn ROI polygon
-                if not self.is_in_roi(bbox):
+                if not self.is_in_roi(bbox, frame.shape):
                     continue
                     
                 # Placeholder for secondary classification logic

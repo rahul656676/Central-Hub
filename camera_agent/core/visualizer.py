@@ -3,9 +3,9 @@ import numpy as np
 from typing import List, Dict, Any
 
 class Visualizer:
-    \"\"\"
+    """
     Draws bounding boxes, labels, and ROI polygons on frames.
-    \"\"\"
+    """
     def __init__(self):
         self.colors = {
             'person': (255, 0, 0),     # Blue

@@ -684,7 +684,11 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
             </div>
             
             <div className="data-grid">
-              {backendAlerts && backendAlerts.length > 0 ? (
+              {alertsLoading ? (
+                <div className="data-grid-card" style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
+                  <div style={{ color: 'var(--text-muted)' }}>Loading live stream...</div>
+                </div>
+              ) : backendAlerts && backendAlerts.length > 0 ? (
                 backendAlerts.map(alert => (
                   <div key={alert.id} className="data-grid-card">
                     <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
@@ -705,34 +709,13 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                   </div>
                 ))
               ) : (
-                <>
-                  <div className="data-grid-card">
-                    <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-                      <Thumbnail icon={User} color="#ef4444" />
-                      <div>
-                        <div style={{ fontWeight: 600 }}>Perimeter Fence - North</div>
-                        <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Detected 10 mins ago</div>
-                      </div>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div style={{ color: '#ef4444', fontWeight: 600 }}>Dwell: 14 mins</div>
-                      <button type="button" className="action-btn">Dispatch Guard</button>
-                    </div>
+                <div className="data-grid-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '40px', background: '#f0fdf4', border: '1px solid #bbf7d0' }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                    <CheckCircle size={32} color="#16a34a" />
+                    <div style={{ fontWeight: 600, color: '#166534' }}>All Clear</div>
+                    <div style={{ fontSize: '0.875rem', color: '#15803d' }}>No active threats detected.</div>
                   </div>
-                  <div className="data-grid-card">
-                    <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
-                      <Thumbnail icon={User} color="#f59e0b" />
-                      <div>
-                        <div style={{ fontWeight: 600 }}>Loading Bay C</div>
-                        <div style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Detected 5 mins ago</div>
-                      </div>
-                    </div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <div style={{ color: '#f59e0b', fontWeight: 600 }}>Dwell: 6 mins</div>
-                      <button type="button" className="action-btn">Review Feed</button>
-                    </div>
-                  </div>
-                </>
+                </div>
               )}
             </div>
           </>

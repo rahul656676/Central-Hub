@@ -3,17 +3,17 @@ import json
 from typing import List, Dict, Any
 
 class DBClient:
-    \"\"\"
+    """
     Fetches the latest camera configurations and active use cases
     from the local FastAPI backend (which talks to the SQLite DB).
-    \"\"\"
+    """
     def __init__(self, api_url: str = "http://localhost:8000"):
         self.api_url = api_url
         
     def get_active_usecases(self, camera_id: str) -> List[Dict[str, Any]]:
-        \"\"\"
+        """
         Fetches the saved use cases (and their ROI settings) for a given camera.
-        \"\"\"
+        """
         try:
             req = urllib.request.Request(f"{self.api_url}/usecases/?camera_id={camera_id}")
             with urllib.request.urlopen(req) as response:

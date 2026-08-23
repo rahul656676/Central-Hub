@@ -54,7 +54,7 @@ class CameraAgent:
         try:
             while True:
                 frame = self.stream.get_frame()
-                if not frame:
+                if frame is None:
                     print(f"[{self.camera_id}] Frame dropped, reconnecting...")
                     time.sleep(2)
                     continue
@@ -84,10 +84,17 @@ class CameraAgent:
                     vis = Visualizer()
                     vis_frame = vis.draw(frame, detections, all_alerts, roi_to_draw)
                     
-                    cv2.imshow(f"Camera Agent - {self.camera_id}", vis_frame)
-                    if cv2.waitKey(1) & 0xFF == ord('q'):
-                        print("User quit visualizer.")
-                        break
+                    # Always save the latest frame so we can view it headlessly
+                    cv2.imwrite("latest_frame.jpg", vis_frame)
+                    
+                    try:
+                        cv2.imshow(f"Camera Agent - {self.camera_id}", vis_frame)
+                        if cv2.waitKey(1) & 0xFF == ord('q'):
+                            print("User quit visualizer.")
+                            break
+                    except Exception:
+                        pass # Ignore headless GUI errors
+                        
                 except ImportError:
                     pass # OpenCV or Visualizer not available, run headless
                         

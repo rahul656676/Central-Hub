@@ -9,13 +9,16 @@ function App() {
   const [activeSolution, setActiveSolution] = useState('Overview');
   const [activeLocationFilter, setActiveLocationFilter] = useState('All Locations');
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth > 768);
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [searchQuery, setSearchQuery] = useState('');
   const [userName, setUserName] = useState('Rahul Jangir');
-  const [userRole, setUserRole] = useState('HEAD_OFFICE'); // 'HEAD_OFFICE' or 'LOCAL_SITE'
+  const [userRole, setUserRole] = useState('HEAD_OFFICE');
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 768) {
+      const mobile = window.innerWidth <= 768;
+      setIsMobile(mobile);
+      if (mobile) {
         setIsSidebarOpen(false);
       } else {
         setIsSidebarOpen(true);
@@ -32,7 +35,7 @@ function App() {
   };
 
   const closeSidebar = () => {
-    if (window.innerWidth <= 768) {
+    if (isMobile) {
       setIsSidebarOpen(false);
     }
   };
@@ -46,7 +49,7 @@ function App() {
         closeSidebar={closeSidebar}
       />
       
-      {isSidebarOpen && window.innerWidth <= 768 && (
+      {isSidebarOpen && isMobile && (
         <div className="sidebar-overlay" onClick={toggleSidebar}></div>
       )}
       
