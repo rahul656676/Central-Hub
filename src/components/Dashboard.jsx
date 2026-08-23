@@ -704,7 +704,13 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                       <div style={{ color: alert.severity === 'high' ? '#ef4444' : '#f59e0b', fontWeight: 600, fontSize: '0.875rem' }}>
                         {alert.description}
                       </div>
-                      <button type="button" className="action-btn">Review Feed</button>
+                      <button type="button" className="action-btn" onClick={() => handleRowClick({ 
+                        type: alert.usecase === 'ppe_monitoring' ? 'PPE Violation' : alert.usecase, 
+                        time: new Date(alert.timestamp).toLocaleTimeString(), 
+                        camera: alert.camera_id, 
+                        location: alert.site_id, 
+                        violation: alert.description 
+                      })}>Review Feed</button>
                     </div>
                   </div>
                 ))
