@@ -105,6 +105,26 @@ class CameraAgent:
             print(f"[{self.camera_id}] Agent stopped.")
 
 if __name__ == '__main__':
+    # Render requires a web server to bind to $PORT if running as a Web Service.
+    # We run a dummy HTTP server in a background thread to satisfy the port scan.
+    import threading
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+    
+    class DummyHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.send_header("Content-type", "text/plain")
+            self.end_headers()
+            self.wfile.write(b"Camera Agent is running.")
+
+    def run_dummy_server():
+        port = int(os.environ.get("PORT", 8080))
+        server = HTTPServer(("0.0.0.0", port), DummyHandler)
+        print(f"Started dummy HTTP server on port {port} for Render.")
+        server.serve_forever()
+
+    threading.Thread(target=run_dummy_server, daemon=True).start()
+
     # Initial camera details (usually passed via CLI args or environment variables)
     camera_details = {
         "id": "cam_loading_bay_01",
