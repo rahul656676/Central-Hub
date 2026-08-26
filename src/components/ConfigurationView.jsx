@@ -202,6 +202,16 @@ const ConfigurationView = () => {
                     </div>
                   </div>
                 )}
+                
+                <hr style={{ border: 'none', borderTop: '1px solid var(--card-border)', margin: '16px 0' }} />
+                
+                <h4 style={{ margin: '0 0 12px 0', color: 'var(--text-secondary)' }}>Alert Routing (Who gets notified?)</h4>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Send SMS/Email to:</label>
+                  <input type="text" placeholder="e.g. John Doe (Supervisor)" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)', marginBottom: '8px' }} />
+                  <input type="email" placeholder="john.doe@company.com" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)', marginBottom: '8px' }} />
+                  <input type="tel" placeholder="+1 555-123-4567" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)' }} />
+                </div>
 
                 <div style={{ marginTop: '16px' }}>
                   <button type="button" onClick={handleSave} style={{ padding: '10px 24px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>Save Configuration</button>

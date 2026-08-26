@@ -1038,9 +1038,16 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
           <h1>{activeLocationFilter !== 'All Locations' ? activeLocationFilter : 'Global Overview'}</h1>
           <p>Analyzing: <strong style={{color: 'var(--accent-blue)'}}>{activeSolution}</strong></p>
         </div>
-        <div className="date-display">
-          <Calendar size={16} />
-          <span>{currentDate}</span>
+        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+          <button 
+            onClick={() => window.open('http://localhost:8000/reports/export-alerts', '_blank')}
+            style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 16px', background: '#10b981', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>
+            <Download size={16} /> Export to Excel
+          </button>
+          <div className="date-display">
+            <Calendar size={16} />
+            <span>{currentDate}</span>
+          </div>
         </div>
       </div>
 
