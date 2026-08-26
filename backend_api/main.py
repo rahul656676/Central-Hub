@@ -5,7 +5,8 @@ import os
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-from routers import alerts, sites, cameras, usecases
+from routers import alerts, sites, cameras, usecases, sync
+from auth import jwt_handler
 from database import engine
 from models.base import Base
 
@@ -33,6 +34,8 @@ app.include_router(alerts.router)
 app.include_router(sites.router)
 app.include_router(cameras.router)
 app.include_router(usecases.router)
+app.include_router(sync.router)
+app.include_router(jwt_handler.router, prefix="/auth", tags=["Auth"])
 
 @app.get("/")
 def read_root():
