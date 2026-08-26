@@ -1,16 +1,15 @@
-from sqlalchemy import Column, Integer, String, DateTime, JSON
+from sqlalchemy import Column, String, ForeignKey, Boolean, DateTime, BigInteger
+from sqlalchemy.dialects.postgresql import JSONB
 from models.base import Base
-import datetime
 
 class Alert(Base):
     __tablename__ = "alerts"
-
-    id = Column(Integer, primary_key=True, index=True)
-    timestamp = Column(DateTime, default=datetime.datetime.utcnow)
-    site_id = Column(String, index=True)
-    camera_id = Column(String, index=True)
-    usecase = Column(String, index=True)
-    alert_type = Column(String)
-    severity = Column(String)
-    description = Column(String)
-    bbox = Column(JSON, nullable=True)
+    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    site_id = Column(String, ForeignKey("sites.id"))
+    camera_id = Column(String, ForeignKey("cameras.id"))
+    usecase_id = Column(String, ForeignKey("usecases.id"))
+    severity = Column(String, default="info")
+    detected_at = Column(DateTime(timezone=True), nullable=False)
+    clip_path = Column(String)
+    metadata_json = Column("metadata", JSONB)
+    synced_to_hq = Column(Boolean, default=False)

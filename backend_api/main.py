@@ -14,6 +14,7 @@ from models import alerts as alerts_model
 from models import sites as sites_model
 from models import cameras as cameras_model
 from models import usecases as usecases_model
+from models import site_health as site_health_model
 
 # Create tables if they don't exist
 Base.metadata.create_all(bind=engine)
