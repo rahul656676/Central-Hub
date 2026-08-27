@@ -9,7 +9,7 @@ const ReportsView = () => {
   const dummyData = [
     { id: 1, date: '2026-08-27 10:45 AM', location: 'Lugoba', type: 'PPE Violation', detail: 'No Helmet Detected' },
     { id: 2, date: '2026-08-27 09:12 AM', location: 'Premix', type: 'Loitering', detail: 'Person loitering in Zone B for > 2 mins' },
-    { id: 3, date: '2026-08-26 16:30 PM', location: 'Impala', type: 'Fire & Smoke', detail: 'High temp anomaly (55°C) in Generator Room' },
+    { id: 3, date: '2026-08-26 16:30 PM', location: 'Impala', type: 'Fire & Smoke', detail: 'High temp anomaly (55Â°C) in Generator Room' },
     { id: 4, date: '2026-08-26 14:15 PM', location: 'Lugoba', type: 'ANPR', detail: 'Unauthorized vehicle plate (T 987 XYZ)' },
     { id: 5, date: '2026-08-25 11:20 AM', location: 'Container Depot', type: 'Spillage', detail: 'Chemical spill detected in Sector 4' }
   ];
@@ -105,4 +105,4 @@ const ReportsView = () => {
   );
 };
 
-export default ReportsView;
+export default ReportsView;
