@@ -843,4 +843,6 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
     margin-left: -15px; /* Adjust for recharts mobile padding */
   }
 }
-@media (max-width: 768px) { .desktop-only { display: none !important; } .header-right-panel { justify-content: flex-end !important; flex: 1; flex-wrap: wrap; margin-top: 0; } .top-header { flex-wrap: nowrap !important; } }
+@media (max-width: 768px) { .desktop-only { display: none !important; } .top-header { flex-wrap: wrap !important; gap: 12px; } .mobile-filters-row { width: 100%; order: 5; } }
+
+@media (min-width: 769px) { .mobile-filters-row { order: 3; flex: 1; justify-content: flex-end; padding-right: 16px; } }

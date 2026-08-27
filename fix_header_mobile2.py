@@ -1,80 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Search, Bell, User, Maximize, Menu, Minimize, Edit2, Check, MapPin, ChevronDown } from 'lucide-react';
+import re
 
-const Header = ({ 
-  toggleSidebar, 
-  searchQuery, setSearchQuery, 
-  userName, setUserName, 
-  activeLocationFilter, setActiveLocationFilter,
-  userRole, setUserRole
-}) => {
-  const [isFullscreen, setIsFullscreen] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
-  const [showProfile, setShowProfile] = useState(false);
-  const [isEditingName, setIsEditingName] = useState(false);
-  const [tempName, setTempName] = useState(userName);
-  
-  const notifRef = useRef(null);
-  const profileRef = useRef(null);
+with open('src/components/Header.jsx', 'r', encoding='utf-8') as f:
+    code = f.read()
 
-  const locations = [
-    'All Locations',
-    'Premix (Micocheni + Taifa)',
-    'Impala',
-    'Lugoba',
-    'Container Depot (AFICD)',
-    'AILL 1 & 2 / Polytra',
-    'Fuel Depot and Yard',
-    'Lake Steel',
-    'Pipe and Cylinder',
-    'Lake Aviation',
-    'Lake Trans',
-    'Building Solution',
-    'Kings Apartment and Offices',
-    'Lake Pipe Showroom and Retail'
-  ];
+# I will rewrite the return statement of Header.jsx completely to fix the mobile layout once and for all.
+# I'll use a Regex to replace everything from "return (" to the end of the file.
 
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
-
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
-    return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
-  }, []);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (notifRef.current && !notifRef.current.contains(event.target)) {
-        setShowNotifications(false);
-      }
-      if (profileRef.current && !profileRef.current.contains(event.target)) {
-        setShowProfile(false);
-        setIsEditingName(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
-
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen().catch(err => {
-        console.error('Error attempting to enable fullscreen: ', err.message);
-      });
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  };
-
-  const handleNameSave = () => {
-    setUserName(tempName);
-    setIsEditingName(false);
-  };
-
-  return (
+new_return = '''return (
     <header className="top-header" style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', padding: '12px 16px', background: '#ffffff', borderBottom: '1px solid #e2e8f0', minHeight: '70px', gap: '16px' }}>
       
       {/* 1. Menu (Left) */}
@@ -212,3 +144,10 @@ const Header = ({
 };
 
 export default Header;
+'''
+
+code = re.sub(r'return \(\s*<header className="top-header".*', new_return, code, flags=re.DOTALL)
+
+with open('src/components/Header.jsx', 'w', encoding='utf-8') as f:
+    f.write(code)
+
