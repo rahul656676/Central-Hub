@@ -323,7 +323,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                       { name: 'Kings Apartment', useCases: 5, compliance: 96, status: 'Online' },
                       { name: 'Showroom', useCases: 2, compliance: 100, status: 'Online' }
                     ].map(site => (
-                    <div key={site.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--card-border)', borderRadius: '8px', padding: '12px 16px', background: 'white', borderLeft: 4px solid  }}>
+                    <div key={site.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--card-border)', borderRadius: '8px', padding: '12px 16px', background: 'white', borderLeft: `4px solid ${site.status === 'Online' ? 'var(--success)' : site.status === 'Warning' ? 'var(--warning)' : 'var(--danger)'}` }}>
                         <div>
                           <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-primary)' }}>{site.name}</h4>
                           <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{site.useCases} Use Cases Active</span>
