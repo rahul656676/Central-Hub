@@ -249,7 +249,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
           {activeSolution === 'Health Monitor' && <HealthMonitorView />}
           {activeSolution === 'Reports' && <ReportsView />}
           {activeSolution === 'Alert Rules' && <AlertRulesView />}
-          {activeSolution !== 'Configuration' && activeSolution !== 'Health Monitor' && (
+          {activeSolution !== 'Configuration' && activeSolution !== 'Health Monitor' && activeSolution !== 'Reports' && activeSolution !== 'Alert Rules' && (
             <div className="card full-width-card" style={{ textAlign: 'center', padding: '60px' }}>
               <h2 style={{ color: 'var(--text-secondary)' }}>{activeSolution} View</h2>
               <p style={{ color: 'var(--text-muted)' }}>Advanced configuration module goes here.</p>
@@ -682,7 +682,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
               </div>
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', gridColumn: '1 / -1' }}>
               {alertsLoading ? (
                 <div className="data-grid-card" style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
                   <div style={{ color: 'var(--text-muted)' }}>Loading live stream...</div>
@@ -835,14 +835,14 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '32px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '32px', gridColumn: '1 / -1' }}>
               <h3 style={{ color: 'var(--text-primary)', margin: 0 }}>Live Thermal Sensors</h3>
               <div style={{ display: 'flex', gap: '8px' }}>
                 <span className="status-dot live"></span> <span style={{ fontSize: '0.875rem', color: 'var(--text-secondary)' }}>Sensors Online</span>
               </div>
             </div>
             
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', gridColumn: '1 / -1' }}>
               <div className="data-grid-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
                   <div style={{ fontWeight: 600 }}>Zone A - Storage</div>
