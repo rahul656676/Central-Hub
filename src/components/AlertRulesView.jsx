@@ -47,23 +47,36 @@ const AlertRulesView = () => {
              </div>
              <div>
                 <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Target Location</label>
-                <select value={newRule.loc} onChange={e => setNewRule({...newRule, loc: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }}>
-                   <option>All Locations</option>
-                   <option>Lugoba</option>
-                   <option>Premix</option>
-                   <option>Impala</option>
-                   <option>Container Depot</option>
-                </select>
+                <select value={newRule.loc} onChange={e => setNewRule({...newRule, loc: e.target.value})} style={ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }>
+                     <option>All Locations</option>
+                     <option>Premix (Micocheni + Taifa)</option>
+                     <option>Impala</option>
+                     <option>Lugoba</option>
+                     <option>Container Depot (AFICD)</option>
+                     <option>Lake Steel</option>
+                     <option>AILL 1 & 2 / Polytra</option>
+                     <option>Fuel Depot and Yard</option>
+                     <option>Pipe and Cylinder</option>
+                     <option>Lake Aviation</option>
+                     <option>Lake Trans</option>
+                     <option>Building Solution</option>
+                     <option>Kings Apartment</option>
+                     <option>Showroom</option>
+                  </select>
              </div>
              <div>
                 <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Incident Type</label>
-                <select value={newRule.type} onChange={e => setNewRule({...newRule, type: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }}>
-                   <option>All Violations</option>
-                   <option>PPE Violations</option>
-                   <option>Fire & Smoke</option>
-                   <option>Security Intrusion</option>
-                   <option>Spillage</option>
-                </select>
+                <select value={newRule.type} onChange={e => setNewRule({...newRule, type: e.target.value})} style={ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }>
+                     <option>All Violations</option>
+                     <option>PPE Monitoring</option>
+                     <option>ANPR & Containers</option>
+                     <option>Counting & Throughput</option>
+                     <option>Loitering Detection</option>
+                     <option>Spillage Control</option>
+                     <option>Fire & Smoke</option>
+                     <option>Productivity</option>
+                     <option>Intrusion Alerts</option>
+                  </select>
              </div>
           </div>
           
