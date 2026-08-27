@@ -29,28 +29,28 @@ const ReportsView = () => {
   };
 
   return (
-    <div className="card full-width-card animate-fade-in" style={{ padding: '0', overflow: 'hidden' }}>
-      <div style={{ padding: '24px', borderBottom: '1px solid var(--card-border)', background: '#f8fafc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+    <div className="card full-width-card animate-fade-in" style={{ padding: '0', overflow: 'hidden' }}}>
+      <div style={{ padding: '24px', borderBottom: '1px solid var(--card-border)', background: '#f8fafc', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}}>
           <FileText size={28} color="var(--accent-blue)" />
           <div>
-            <h2 style={{ margin: 0, color: 'var(--text-primary)' }}>System Reports & Analytics</h2>
-            <p style={{ color: 'var(--text-secondary)', margin: '4px 0 0 0', fontSize: '0.875rem' }}>
+            <h2 style={{ margin: 0, color: 'var(--text-primary)' }}}>System Reports & Analytics</h2>
+            <p style={{ color: 'var(--text-secondary)', margin: '4px 0 0 0', fontSize: '0.875rem' }}}>
               Filter incident data date-wise and location-wise. Export to Excel/CSV.
             </p>
           </div>
         </div>
-        <button onClick={handleExport} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: 'var(--success)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}>
+        <button onClick={handleExport} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 20px', background: 'var(--success)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: 600 }}}>
           <Download size={18} /> Export to Excel
         </button>
       </div>
 
-      <div style={{ padding: '24px' }}>
+      <div style={{ padding: '24px' }}}>
         {/* FILTERS */}
-        <div style={{ display: 'flex', gap: '24px', marginBottom: '24px', background: '#f1f5f9', padding: '16px', borderRadius: '8px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: '24px', marginBottom: '24px', background: '#f1f5f9', padding: '16px', borderRadius: '8px', alignItems: 'flex-end', flexWrap: 'wrap' }}}>
           <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: 600 }}><MapPin size={14} style={{display:'inline', marginBottom:'-2px'}}/> Location Filter</label>
-            <select value={location} onChange={(e) => setLocation(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)', width: '200px' }>
+            <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: 600 }}}><MapPin size={14} style={{display:'inline', marginBottom:'-2px'}}/> Location Filter</label>
+            <select value={location} onChange={(e) => setLocation(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)', width: '200px' }}>
                 <option>All Locations</option>
                 <option>Premix (Micocheni + Taifa)</option>
                 <option>Impala</option>
@@ -68,41 +68,41 @@ const ReportsView = () => {
               </select>
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: 600 }}><Calendar size={14} style={{display:'inline', marginBottom:'-2px'}}/> Start Date</label>
+            <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: 600 }}}><Calendar size={14} style={{display:'inline', marginBottom:'-2px'}}/> Start Date</label>
             <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }} />
           </div>
           <div>
-            <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: 600 }}><Calendar size={14} style={{display:'inline', marginBottom:'-2px'}}/> End Date</label>
+            <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: 600 }}}><Calendar size={14} style={{display:'inline', marginBottom:'-2px'}}/> End Date</label>
             <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }} />
           </div>
-          <button style={{ padding: '10px 20px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 500 }}>
+          <button style={{ padding: '10px 20px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 500 }}}>
             <Filter size={16} /> Apply Filters
           </button>
         </div>
 
         {/* DATA TABLE */}
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}}>
           <thead>
-            <tr style={{ background: '#f8fafc', color: 'var(--text-secondary)', borderBottom: '2px solid var(--card-border)' }}>
-              <th style={{ padding: '16px' }}>Date & Time</th>
-              <th style={{ padding: '16px' }}>Location</th>
-              <th style={{ padding: '16px' }}>Incident Type</th>
-              <th style={{ padding: '16px' }}>Details / Remarks</th>
+            <tr style={{ background: '#f8fafc', color: 'var(--text-secondary)', borderBottom: '2px solid var(--card-border)' }}}>
+              <th style={{ padding: '16px' }}}>Date & Time</th>
+              <th style={{ padding: '16px' }}}>Location</th>
+              <th style={{ padding: '16px' }}}>Incident Type</th>
+              <th style={{ padding: '16px' }}}>Details / Remarks</th>
             </tr>
           </thead>
           <tbody>
             {filteredData.length > 0 ? filteredData.map((row) => (
-              <tr key={row.id} style={{ borderBottom: '1px solid var(--card-border)' }}>
-                <td style={{ padding: '16px', fontWeight: 500 }}>{row.date}</td>
-                <td style={{ padding: '16px' }}>
-                  <span style={{ background: '#e0f2fe', color: '#0284c7', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}>{row.location}</span>
+              <tr key={row.id} style={{ borderBottom: '1px solid var(--card-border)' }}}>
+                <td style={{ padding: '16px', fontWeight: 500 }}}>{row.date}</td>
+                <td style={{ padding: '16px' }}}>
+                  <span style={{ background: '#e0f2fe', color: '#0284c7', padding: '4px 10px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}}>{row.location}</span>
                 </td>
-                <td style={{ padding: '16px', fontWeight: 600, color: row.type === 'PPE Violation' ? '#ef4444' : row.type === 'Fire & Smoke' ? '#f59e0b' : 'var(--text-primary)' }}>{row.type}</td>
-                <td style={{ padding: '16px', color: 'var(--text-secondary)' }}>{row.detail}</td>
+                <td style={{ padding: '16px', fontWeight: 600, color: row.type === 'PPE Violation' ? '#ef4444' : row.type === 'Fire & Smoke' ? '#f59e0b' : 'var(--text-primary)' }}}>{row.type}</td>
+                <td style={{ padding: '16px', color: 'var(--text-secondary)' }}}>{row.detail}</td>
               </tr>
             )) : (
               <tr>
-                <td colSpan="4" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                <td colSpan="4" style={{ padding: '40px', textAlign: 'center', color: 'var(--text-muted)' }}}>
                   No reports found for the selected date and location.
                 </td>
               </tr>
