@@ -214,6 +214,7 @@ const IncidentDrawer = ({ incident, onClose }) => {
 
 import ConfigurationView from './ConfigurationView';
 import HealthMonitorView from './HealthMonitorView';
+import ReportsView from './ReportsView';
 
 const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName, userRole }) => {
   const [currentDate, setCurrentDate] = useState('');
@@ -245,6 +246,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
         <div className="dashboard-grid">
           {activeSolution === 'Configuration' && <ConfigurationView />}
           {activeSolution === 'Health Monitor' && <HealthMonitorView />}
+          {activeSolution === 'Reports' && <ReportsView />}
           {activeSolution !== 'Configuration' && activeSolution !== 'Health Monitor' && (
             <div className="card full-width-card" style={{ textAlign: 'center', padding: '60px' }}>
               <h2 style={{ color: 'var(--text-secondary)' }}>{activeSolution} View</h2>
