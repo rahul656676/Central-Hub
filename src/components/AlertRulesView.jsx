@@ -92,7 +92,7 @@ const AlertRulesView = () => {
             </thead>
             <tbody>
               {rules.map(rule => (
-                <tr key={rule.id}}>
+                <tr key={rule.id}>
                   <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>{rule.name}</td>
                   <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>{rule.contact}</td>
                   <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}><span style={{ background: rule.loc === 'All Locations' ? '#e0f2fe' : '#fef08a', color: rule.loc === 'All Locations' ? '#0284c7' : '#854d0e', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem' }}>{rule.loc}</span></td>
