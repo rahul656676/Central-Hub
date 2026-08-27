@@ -215,6 +215,7 @@ const IncidentDrawer = ({ incident, onClose }) => {
 import ConfigurationView from './ConfigurationView';
 import HealthMonitorView from './HealthMonitorView';
 import ReportsView from './ReportsView';
+import AlertRulesView from './AlertRulesView';
 
 const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName, userRole }) => {
   const [currentDate, setCurrentDate] = useState('');
@@ -247,6 +248,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
           {activeSolution === 'Configuration' && <ConfigurationView />}
           {activeSolution === 'Health Monitor' && <HealthMonitorView />}
           {activeSolution === 'Reports' && <ReportsView />}
+          {activeSolution === 'Alert Rules' && <AlertRulesView />}
           {activeSolution !== 'Configuration' && activeSolution !== 'Health Monitor' && (
             <div className="card full-width-card" style={{ textAlign: 'center', padding: '60px' }}>
               <h2 style={{ color: 'var(--text-secondary)' }}>{activeSolution} View</h2>
@@ -680,7 +682,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
               </div>
             </div>
             
-            <div className="data-grid">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
               {alertsLoading ? (
                 <div className="data-grid-card" style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
                   <div style={{ color: 'var(--text-muted)' }}>Loading live stream...</div>
@@ -840,7 +842,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
               </div>
             </div>
             
-            <div className="data-grid">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
               <div className="data-grid-card">
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '16px' }}>
                   <div style={{ fontWeight: 600 }}>Zone A - Storage</div>

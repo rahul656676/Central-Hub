@@ -49,7 +49,7 @@ const ConfigurationView = () => {
       </div>
       
       <div style={{ display: 'flex', borderBottom: '1px solid var(--card-border)', background: '#f8fafc' }}>
-        {['Sites', 'Cameras', 'Use Cases', 'Alert Rules'].map(tab => (
+        {['Sites', 'Cameras', 'Use Cases'].map(tab => (
           <button 
             type="button"
             key={tab}
