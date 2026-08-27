@@ -50,7 +50,7 @@ const ReportsView = () => {
         <div style={{ display: 'flex', gap: '24px', marginBottom: '24px', background: '#f1f5f9', padding: '16px', borderRadius: '8px', alignItems: 'flex-end', flexWrap: 'wrap' }}>
           <div>
             <label style={{ display: 'block', fontSize: '0.875rem', color: 'var(--text-secondary)', marginBottom: '8px', fontWeight: 600 }}><MapPin size={14} style={{display:'inline', marginBottom:'-2px'}}/> Location Filter</label>
-            <select value={location} onChange={(e) => setLocation(e.target.value)} style={ padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)', width: '200px' }>
+            <select value={location} onChange={(e) => setLocation(e.target.value)} style={{ padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)', width: '200px' }>
                 <option>All Locations</option>
                 <option>Premix (Micocheni + Taifa)</option>
                 <option>Impala</option>
