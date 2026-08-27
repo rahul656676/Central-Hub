@@ -8,6 +8,12 @@ const ConfigurationView = () => {
   const [useCaseConfig, setUseCaseConfig] = useState(false);
   const roiDataRef = useRef(null);
   const [toast, setToast] = useState(null);
+  const [rules, setRules] = useState([
+    { id: 1, name: 'Rahul Sharma', contact: 'rahul656676@users.noreply.github.com', loc: 'All Locations', type: 'All Violations' },
+    { id: 2, name: 'Site Manager (Lugoba)', contact: '+255 123 456 789', loc: 'Lugoba', type: 'PPE Violations' }
+  ]);
+  const [newRule, setNewRule] = useState({ name: '', contact: '', loc: 'All Locations', type: 'All Violations' });
+
   
   const showToast = (message, type = 'success') => {
     setToast({ message, type });
@@ -218,22 +224,22 @@ const ConfigurationView = () => {
           <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <h3 style={{ margin: 0, color: 'var(--text-primary)' }}>Manage Alert Receivers</h3>
-              <button type="button" style={{ padding: '8px 16px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>+ Add Recipient</button>
+              <button type="button" onClick={() => { if(newRule.name && newRule.contact) { setRules([...rules, { id: Date.now(), ...newRule }]); setNewRule({ name: '', contact: '', loc: 'All Locations', type: 'All Violations' }); setToast('Alert Rule Added!'); setTimeout(() => setToast(null), 3000); } }} style={{ padding: '8px 16px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>+ Add Recipient</button>
             </div>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '-16px' }}>Configure who receives Email/SMS alerts based on location and incident type.</p>
             
             <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', border: '1px solid var(--card-border)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
                <div>
                   <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Recipient Name</label>
-                  <input type="text" placeholder="e.g. John Doe" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }} />
+                  <input type="text" placeholder="e.g. John Doe" value={newRule.name} onChange={e => setNewRule({...newRule, name: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }} />
                </div>
                <div>
                   <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Email / Phone</label>
-                  <input type="text" placeholder="john@example.com" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }} />
+                  <input type="text" placeholder="john@example.com" value={newRule.contact} onChange={e => setNewRule({...newRule, contact: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }} />
                </div>
                <div>
                   <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Target Location</label>
-                  <select style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }}>
+                  <select value={newRule.loc} onChange={e => setNewRule({...newRule, loc: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }}>
                      <option>All Locations</option>
                      <option>Lugoba</option>
                      <option>Premix</option>
@@ -241,7 +247,7 @@ const ConfigurationView = () => {
                </div>
                <div>
                   <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Alert Type</label>
-                  <select style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }}>
+                  <select value={newRule.type} onChange={e => setNewRule({...newRule, type: e.target.value})} style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }}>
                      <option>All Violations</option>
                      <option>PPE Only</option>
                      <option>Loitering Only</option>
@@ -261,20 +267,15 @@ const ConfigurationView = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>Rahul Sharma</td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>rahul656676@users.noreply.github.com</td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}><span style={{ background: '#e0f2fe', color: '#0284c7', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem' }}>All Locations</span></td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>All Violations</td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9', color: '#ef4444', cursor: 'pointer' }}>Remove</td>
-                </tr>
-                <tr>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>Site Manager (Lugoba)</td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>+255 123 456 789</td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}><span style={{ background: '#fef08a', color: '#854d0e', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem' }}>Lugoba Only</span></td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>PPE Violations</td>
-                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9', color: '#ef4444', cursor: 'pointer' }}>Remove</td>
-                </tr>
+                {rules.map(rule => (
+                  <tr key={rule.id}>
+                    <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>{rule.name}</td>
+                    <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>{rule.contact}</td>
+                    <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}><span style={{ background: rule.loc === 'All Locations' ? '#e0f2fe' : '#fef08a', color: rule.loc === 'All Locations' ? '#0284c7' : '#854d0e', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem' }}>{rule.loc}</span></td>
+                    <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>{rule.type}</td>
+                    <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9', color: '#ef4444', cursor: 'pointer' }} onClick={() => { setRules(rules.filter(r => r.id !== rule.id)); setToast('Rule Removed!'); setTimeout(() => setToast(null), 3000); }}>Remove</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

@@ -301,49 +301,44 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
               {/* Left Side: Camera Matrix */}
               <div className="split-card-left" style={{ flex: 2 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <h3 style={{ margin: 0 }}>Command Center: Live Feeds</h3>
-                  <span style={{ fontSize: '0.75rem', background: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>LIVE</span>
+                  <h3 style={{ margin: 0 }}>Global Site Health & Compliance</h3>
+                  <span style={{ fontSize: '0.75rem', background: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>GLOBAL AVG HEALTH: 78%</span>
                 </div>
                 <div className="data-grid camera-matrix" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '12px', marginTop: 0 }}>
-                  {activeLocationFilter === 'All Locations' ? (
-                    <>
-                      <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>Impala: Main Gate (ANPR)</div>
-                        <img src="https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=400&q=80" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
+                  
+                  {[
+                    { name: 'Premix', useCases: 9, compliance: 98, status: 'Online' },
+                    { name: 'Impala', useCases: 5, compliance: 100, status: 'Online' },
+                    { name: 'Lugoba', useCases: 9, compliance: 92, status: 'Warning' },
+                    { name: 'Container Depot', useCases: 3, compliance: 100, status: 'Online' },
+                    { name: 'Lake Steel', useCases: 4, compliance: 0, status: 'Offline' },
+                  ].map(site => (
+                    <div key={site.name} style={{ border: '1px solid var(--card-border)', borderRadius: '12px', padding: '16px', background: 'white', position: 'relative', overflow: 'hidden' }}>
+                      <div style={{ position: 'absolute', top: 0, left: 0, width: '4px', height: '100%', background: site.status === 'Online' ? 'var(--success)' : site.status === 'Warning' ? 'var(--warning)' : 'var(--danger)' }}></div>
+                      
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '16px' }}>
+                        <h4 style={{ margin: 0, fontSize: '1rem', color: 'var(--text-primary)' }}>{site.name}</h4>
+                        {site.status === 'Online' && <span style={{ background: '#dcfce7', color: '#166534', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}>Online</span>}
+                        {site.status === 'Warning' && <span style={{ background: '#fef08a', color: '#854d0e', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}>Warning</span>}
+                        {site.status === 'Offline' && <span style={{ background: '#fee2e2', color: '#991b1b', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem', fontWeight: 600 }}>Offline</span>}
                       </div>
-                      <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>Lugoba: Assembly Area (PPE)</div>
-                        <img src="/cam4.png" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', background: '#f8fafc', padding: '12px', borderRadius: '8px' }}>
+                        <div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>USE CASES</div>
+                          <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--text-primary)' }}>{site.useCases}</div>
+                        </div>
+
+                        <div>
+                          <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', fontWeight: 600 }}>AVG HEALTH</div>
+                          <div style={{ fontSize: '1.25rem', fontWeight: 700, color: site.compliance < 50 ? 'var(--danger)' : site.compliance < 95 ? 'var(--warning)' : 'var(--success)' }}>
+                            {site.compliance}%
+                          </div>
+                        </div>
                       </div>
-                      <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>Premix: Perimeter Fence</div>
-                        <img src="/cam9.jpg" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
-                      </div>
-                      <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>Lake Steel: Chemical Depot</div>
-                        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=400&q=80" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>{activeLocationFilter}: Zone A</div>
-                        <img src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=400&q=80" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
-                      </div>
-                      <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>{activeLocationFilter}: Processing Line</div>
-                        <img src="https://images.unsplash.com/photo-1513828583688-c52646db42da?auto=format&fit=crop&w=400&q=80" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
-                      </div>
-                      <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>{activeLocationFilter}: Loading Bay</div>
-                        <img src="https://images.unsplash.com/photo-1586528116311-ad8ed7c80a71?auto=format&fit=crop&w=400&q=80" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
-                      </div>
-                      <div style={{ background: '#0f172a', height: '180px', borderRadius: '8px', position: 'relative', overflow: 'hidden' }}>
-                        <div style={{ position: 'absolute', top: 8, left: 8, background: 'rgba(0,0,0,0.6)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2 }}>{activeLocationFilter}: Staff Entrance</div>
-                        <img src="https://images.unsplash.com/photo-1551281622-d7b189ff4c28?auto=format&fit=crop&w=400&q=80" alt="Camera Feed" style={{ width: '100%', height: '100%', objectFit: 'cover', opacity: 0.8 }} />
-                      </div>
-                    </>
-                  )}
+                    </div>
+                  ))}
+
                 </div>
               </div>
 
@@ -852,7 +847,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                   <Flame size={20} color="#10b981" />
                 </div>
                 <div style={{ background: '#0f172a', height: '140px', borderRadius: '8px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', overflow: 'hidden' }}>
-                  <img src="https://images.unsplash.com/photo-1590856029826-c7a73142bbf1?auto=format&fit=crop&w=400&q=80" alt="Thermal Normal" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'hue-rotate(90deg) saturate(200%)' }} />
+                  <img src="/cam4.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'hue-rotate(90deg) saturate(200%)' }} />
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span>Current Temp:</span>
@@ -865,7 +860,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                   <Flame size={20} color="#f59e0b" />
                 </div>
                 <div style={{ background: '#0f172a', height: '140px', borderRadius: '8px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', position: 'relative', overflow: 'hidden' }}>
-                  <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(239, 68, 68, 0.9)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2, fontWeight: 'bold' }}>HEAT SPOT</div><img src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=400&q=80" alt="Thermal Heat" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(100%) hue-rotate(300deg) saturate(500%) contrast(150%)' }} />
+                  <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(239, 68, 68, 0.9)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2, fontWeight: 'bold' }}>HEAT SPOT</div><img src="/cam9.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(100%) hue-rotate(300deg) saturate(500%) contrast(150%)' }} />
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span>Current Temp:</span>
