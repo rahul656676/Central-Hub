@@ -43,7 +43,7 @@ const ConfigurationView = () => {
       </div>
       
       <div style={{ display: 'flex', borderBottom: '1px solid var(--card-border)', background: '#f8fafc' }}>
-        {['Sites', 'Cameras', 'Use Cases'].map(tab => (
+        {['Sites', 'Cameras', 'Use Cases', 'Alert Rules'].map(tab => (
           <button 
             type="button"
             key={tab}
@@ -205,19 +205,78 @@ const ConfigurationView = () => {
                 
                 <hr style={{ border: 'none', borderTop: '1px solid var(--card-border)', margin: '16px 0' }} />
                 
-                <h4 style={{ margin: '0 0 12px 0', color: 'var(--text-secondary)' }}>Alert Routing (Who gets notified?)</h4>
-                <div>
-                  <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Send SMS/Email to:</label>
-                  <input type="text" placeholder="e.g. John Doe (Supervisor)" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)', marginBottom: '8px' }} />
-                  <input type="email" placeholder="john.doe@company.com" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)', marginBottom: '8px' }} />
-                  <input type="tel" placeholder="+1 555-123-4567" style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid var(--card-border)' }} />
-                </div>
-
                 <div style={{ marginTop: '16px' }}>
                   <button type="button" onClick={handleSave} style={{ padding: '10px 24px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontWeight: '500' }}>Save Configuration</button>
                 </div>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* ALERT RULES TAB */}
+        {activeTab === 'Alert Rules' && (
+          <div className="animate-fade-in" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <h3 style={{ margin: 0, color: 'var(--text-primary)' }}>Manage Alert Receivers</h3>
+              <button type="button" style={{ padding: '8px 16px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>+ Add Recipient</button>
+            </div>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '-16px' }}>Configure who receives Email/SMS alerts based on location and incident type.</p>
+            
+            <div style={{ background: '#f8fafc', padding: '16px', borderRadius: '8px', border: '1px solid var(--card-border)', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px' }}>
+               <div>
+                  <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Recipient Name</label>
+                  <input type="text" placeholder="e.g. John Doe" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }} />
+               </div>
+               <div>
+                  <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Email / Phone</label>
+                  <input type="text" placeholder="john@example.com" style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }} />
+               </div>
+               <div>
+                  <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Target Location</label>
+                  <select style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }}>
+                     <option>All Locations</option>
+                     <option>Lugoba</option>
+                     <option>Premix</option>
+                  </select>
+               </div>
+               <div>
+                  <label style={{ display: 'block', marginBottom: '8px', color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Alert Type</label>
+                  <select style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid var(--card-border)' }}>
+                     <option>All Violations</option>
+                     <option>PPE Only</option>
+                     <option>Loitering Only</option>
+                     <option>Fire & Smoke Only</option>
+                  </select>
+               </div>
+            </div>
+
+            <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '16px' }}>
+              <thead>
+                <tr style={{ background: '#f1f5f9', textAlign: 'left', color: 'var(--text-secondary)' }}>
+                  <th style={{ padding: '12px', borderBottom: '1px solid var(--card-border)' }}>Name</th>
+                  <th style={{ padding: '12px', borderBottom: '1px solid var(--card-border)' }}>Contact</th>
+                  <th style={{ padding: '12px', borderBottom: '1px solid var(--card-border)' }}>Location Scope</th>
+                  <th style={{ padding: '12px', borderBottom: '1px solid var(--card-border)' }}>Incident Type</th>
+                  <th style={{ padding: '12px', borderBottom: '1px solid var(--card-border)' }}>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>Rahul Sharma</td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>rahul656676@users.noreply.github.com</td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}><span style={{ background: '#e0f2fe', color: '#0284c7', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem' }}>All Locations</span></td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>All Violations</td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9', color: '#ef4444', cursor: 'pointer' }}>Remove</td>
+                </tr>
+                <tr>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>Site Manager (Lugoba)</td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>+255 123 456 789</td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}><span style={{ background: '#fef08a', color: '#854d0e', padding: '2px 8px', borderRadius: '12px', fontSize: '0.75rem' }}>Lugoba Only</span></td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9' }}>PPE Violations</td>
+                  <td style={{ padding: '12px', borderBottom: '1px solid #f1f5f9', color: '#ef4444', cursor: 'pointer' }}>Remove</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         )}
 

@@ -689,7 +689,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                   <div style={{ color: 'var(--text-muted)' }}>Loading live stream...</div>
                 </div>
               ) : backendAlerts && backendAlerts.length > 0 ? (
-                backendAlerts.map(alert => (
+                backendAlerts.filter((alert, index, self) => index === self.findIndex((t) => t.description === alert.description && t.camera_id === alert.camera_id)).slice(0, 4).map(alert => (
                   <div key={alert.id} className="data-grid-card">
                     <div style={{ display: 'flex', gap: '16px', marginBottom: '16px' }}>
                       <Thumbnail icon={alert.usecase.includes('ppe') ? User : AlertTriangle} color={alert.severity === 'high' ? '#ef4444' : '#f59e0b'} />
@@ -849,8 +849,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                   <div style={{ fontWeight: 600 }}>Zone A - Storage</div>
                   <Flame size={20} color="#10b981" />
                 </div>
-                <div style={{ background: '#0f172a', height: '100px', borderRadius: '8px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b' }}>
-                  [Infrared Feed Normal]
+                <div style={{ background: '#0f172a', height: '140px', borderRadius: '8px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748b', overflow: 'hidden' }}>
+                  <img src="https://images.unsplash.com/photo-1590856029826-c7a73142bbf1?auto=format&fit=crop&w=400&q=80" alt="Thermal Normal" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'hue-rotate(90deg) saturate(200%)' }} />
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span>Current Temp:</span>
@@ -862,8 +862,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                   <div style={{ fontWeight: 600 }}>Zone C - Generator</div>
                   <Flame size={20} color="#f59e0b" />
                 </div>
-                <div style={{ background: '#0f172a', height: '100px', borderRadius: '8px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444' }}>
-                  [Infrared Heat Spot Detected]
+                <div style={{ background: '#0f172a', height: '140px', borderRadius: '8px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', position: 'relative', overflow: 'hidden' }}>
+                  <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(239, 68, 68, 0.9)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2, fontWeight: 'bold' }}>HEAT SPOT</div><img src="https://images.unsplash.com/photo-1587293852726-70cdb56c2866?auto=format&fit=crop&w=400&q=80" alt="Thermal Heat" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(100%) hue-rotate(300deg) saturate(500%) contrast(150%)' }} />
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span>Current Temp:</span>
