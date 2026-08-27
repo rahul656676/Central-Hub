@@ -1,0 +1,136 @@
+import time
+import sys
+import os
+
+# Ensure the parent directory is in the Python path for imports
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from core.stream import RTSPStream
+from core.shared_models import SharedDetector
+from core.alert_dispatcher import AlertDispatcher
+from registry import USECASE_REGISTRY
+from config.db_client import DBClient
+
+class CameraAgent:
+    """
+    The main agent loop that runs for a single camera.
+    Pulls frames, runs shared detection, and executes assigned use cases.
+    """
+    def __init__(self, camera_config: dict):
+        self.camera_id = camera_config['id']
+        self.site_id = camera_config['site_id']
+        
+        self.stream = RTSPStream(self.camera_id, camera_config['rtsp_url'])
+        self.detector = SharedDetector()
+        self.dispatcher = AlertDispatcher(self.site_id)
+        self.db_client = DBClient()
+        self.active_plugins = []
+        
+        self.reload_config()
+
+    def reload_config(self):
+        """Fetches latest use cases and ROIs from the backend"""
+        usecases = self.db_client.get_active_usecases(self.camera_id)
+        
+        # If backend is down or no usecases are configured, load a fallback for testing
+        if not usecases:
+            print(f"[{self.camera_id}] No config found in DB, using fallback PPE plugin...")
+            usecases = [{"usecase_name": "ppe_monitoring", "settings": {"require_helmet": True}}]
+            
+        self.active_plugins = []
+        for uc in usecases:
+            uc_name = uc['usecase_name']
+            if uc_name in USECASE_REGISTRY:
+                plugin_class = USECASE_REGISTRY[uc_name]
+                # Pass the ROI and other settings from the DB to the plugin
+                plugin_instance = plugin_class(uc.get('settings', {}))
+                self.active_plugins.append((uc_name, plugin_instance))
+                print(f"[{self.camera_id}] Loaded plugin: {uc_name} with ROI: {uc.get('settings', {}).get('roi')}")
+
+    def start(self):
+        self.stream.connect()
+        
+        print(f"[{self.camera_id}] Starting main inference loop...")
+        try:
+            while True:
+                frame = self.stream.get_frame()
+                if frame is None:
+                    print(f"[{self.camera_id}] Frame dropped, reconnecting...")
+                    time.sleep(2)
+                    continue
+                    
+                # 1. Run shared base detection (person, vehicle)
+                detections = self.detector.detect(frame)
+                
+                # 2. Pass detections to each active use case plugin
+                all_alerts = []
+                roi_to_draw = None
+                for uc_name, plugin in self.active_plugins:
+                    alerts = plugin.process_frame(frame, detections)
+                    all_alerts.extend(alerts)
+                    
+                    # Grab ROI for visualization if it's the PPE plugin
+                    if hasattr(plugin, 'roi_polygon'):
+                        roi_to_draw = plugin.roi_polygon
+                    
+                    # 3. Dispatch any generated alerts
+                    for alert in alerts:
+                        self.dispatcher.dispatch(self.camera_id, uc_name, alert)
+                        
+                # 4. Visualize and Display
+                try:
+                    from core.visualizer import Visualizer
+                    import cv2
+                    vis = Visualizer()
+                    vis_frame = vis.draw(frame, detections, all_alerts, roi_to_draw)
+                    
+                    # Always save the latest frame so we can view it headlessly
+                    cv2.imwrite("latest_frame.jpg", vis_frame)
+                    
+                    try:
+                        cv2.imshow(f"Camera Agent - {self.camera_id}", vis_frame)
+                        if cv2.waitKey(1) & 0xFF == ord('q'):
+                            print("User quit visualizer.")
+                            break
+                    except Exception:
+                        pass # Ignore headless GUI errors
+                        
+                except ImportError:
+                    pass # OpenCV or Visualizer not available, run headless
+                        
+                # Sleep to simulate FPS throttle
+                time.sleep(0.1)
+                
+        except KeyboardInterrupt:
+            print(f"[{self.camera_id}] Agent stopped.")
+
+if __name__ == '__main__':
+    # Render requires a web server to bind to $PORT if running as a Web Service.
+    # We run a dummy HTTP server in a background thread to satisfy the port scan.
+    import threading
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+    
+    class DummyHandler(BaseHTTPRequestHandler):
+        def do_GET(self):
+            self.send_response(200)
+            self.send_header("Content-type", "text/plain")
+            self.end_headers()
+            self.wfile.write(b"Camera Agent is running.")
+
+    def run_dummy_server():
+        port = int(os.environ.get("PORT", 8080))
+        server = HTTPServer(("0.0.0.0", port), DummyHandler)
+        print(f"Started dummy HTTP server on port {port} for Render.")
+        server.serve_forever()
+
+    threading.Thread(target=run_dummy_server, daemon=True).start()
+
+    # Initial camera details (usually passed via CLI args or environment variables)
+    camera_details = {
+        "id": "cam_loading_bay_01",
+        "site_id": "site_lugoba",
+        "rtsp_url": "rtsp://admin:pass@192.168.1.100/stream1"
+    }
+    
+    agent = CameraAgent(camera_details)
+    agent.start()
