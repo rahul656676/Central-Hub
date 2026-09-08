@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 import sys
 import os
@@ -22,6 +23,12 @@ from models import alert_rules as alert_rules_model
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Central Hub - Backend API", version="1.0.0")
+
+# Serve local snapshots from the agent
+snapshot_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../no_helmet_incidents"))
+os.makedirs(snapshot_dir, exist_ok=True)
+app.mount("/snapshots", StaticFiles(directory=snapshot_dir), name="snapshots")
+
 
 app.add_middleware(
     CORSMiddleware,
