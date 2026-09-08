@@ -846,3 +846,53 @@ h1, h2, h3, h4, .card-title, .nav-section-title, .metric-value, .page-header h1 
 @media (max-width: 768px) { .desktop-only { display: none !important; } .top-header { flex-wrap: wrap !important; gap: 12px; } .mobile-filters-row { width: 100%; order: 5; } }
 
 @media (min-width: 769px) { .mobile-filters-row { order: 3; flex: 1; justify-content: flex-end; padding-right: 16px; } }
+.heatmap-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    min-width: 1000px;
+}
+
+.heatmap-table th {
+    padding: 16px 12px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e2e8f0;
+    color: #64748b;
+    font-weight: 700;
+}
+
+.heatmap-row {
+    transition: all 0.2s ease;
+}
+
+.heatmap-row:hover {
+    background-color: #f8fafc;
+}
+
+.heatmap-row td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+}
+
+.heatmap-cell-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    min-width: 54px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.heatmap-sticky-col {
+    position: sticky;
+    left: 0;
+    background: inherit;
+    z-index: 10;
+    border-right: 1px solid #e2e8f0;
+}

@@ -101,49 +101,46 @@ const SiteHealthHeatmap = () => {
     return Math.round(sum / locations.length);
   });
 
-  const getHeatColor = (val) => {
-     if (val === 0) return '#f8fafc';
-     if (val >= 95) return '#dcfce7'; // green
-     if (val >= 85) return '#fef08a'; // yellow
-     return '#fee2e2'; // red
-  };
-  const getTextColor = (val) => {
-     if (val === 0) return '#94a3b8';
-     if (val >= 95) return '#166534';
-     if (val >= 85) return '#854d0e';
-     return '#991b1b';
+  const getHeatStyle = (val) => {
+     if (val === 0) return { bg: '#f1f5f9', text: '#94a3b8', border: '#e2e8f0' };
+     if (val >= 95) return { bg: '#dcfce7', text: '#15803d', border: '#bbf7d0' };
+     if (val >= 85) return { bg: '#fef9c3', text: '#a16207', border: '#fef08a' };
+     return { bg: '#fee2e2', text: '#b91c1c', border: '#fecaca' };
   };
 
   return (
-    <div style={{ overflowX: 'auto', width: '100%', paddingBottom: '8px' }}>
-      <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 4px', minWidth: '1000px' }}>
+    <div style={{ overflowX: 'auto', width: '100%', paddingBottom: '16px', borderRadius: '8px' }}>
+      <table className="heatmap-table">
         <thead>
           <tr>
-            <th style={{ padding: '16px 12px', textAlign: 'left', color: '#64748b', fontSize: '1.1rem', textTransform: 'uppercase' }}>Location</th>
+            <th className="heatmap-sticky-col" style={{ textAlign: 'left', background: 'white' }}>Location</th>
             {usecases.map(uc => (
-              <th key={uc} style={{ padding: '16px 12px', textAlign: 'center', color: '#64748b', fontSize: '1.1rem', textTransform: 'uppercase' }}>{uc}</th>
+              <th key={uc} style={{ textAlign: 'center' }}>{uc}</th>
             ))}
-            <th style={{ padding: '16px 12px', textAlign: 'center', color: '#0f172a', fontSize: '1.1rem', fontWeight: 800 }}>AVG</th>
+            <th style={{ textAlign: 'center', color: '#0f172a', borderLeft: '1px dashed #e2e8f0' }}>AVG Health</th>
           </tr>
         </thead>
         <tbody>
           {data.map(row => (
-            <tr key={row.name}>
-              <td style={{ padding: '16px 12px', fontWeight: 600, color: '#0f172a', fontSize: '1rem', background: '#f8fafc', borderRadius: '4px 0 0 4px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: row.avg === 0 ? '#cbd5e1' : row.avg >= 90 ? '#22c55e' : row.avg >= 80 ? '#f59e0b' : '#ef4444' }}></div>
+            <tr key={row.name} className="heatmap-row" style={{ background: 'white' }}>
+              <td className="heatmap-sticky-col">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontWeight: 600, color: '#1e293b', fontSize: '0.95rem' }}>
+                  <div style={{ width: '8px', height: '8px', borderRadius: '50%', boxShadow: '0 0 0 2px white', background: row.avg === 0 ? '#cbd5e1' : row.avg >= 90 ? '#22c55e' : row.avg >= 80 ? '#f59e0b' : '#ef4444' }}></div>
                   {row.name}
                 </div>
               </td>
-              {row.scores.map((score, i) => (
-                <td key={i} style={{ padding: '6px', background: '#f8fafc' }}>
-                  <div style={{ background: getHeatColor(score), color: getTextColor(score), padding: '16px 12px', borderRadius: '4px', textAlign: 'center', fontSize: '0.95rem', fontWeight: 600 }}>
-                    {score === 0 ? '-' : score + '%'}
-                  </div>
-                </td>
-              ))}
-              <td style={{ padding: '6px', background: '#f8fafc', borderRadius: '0 4px 4px 0' }}>
-                  <div style={{ background: '#e2e8f0', color: '#0f172a', padding: '16px 12px', borderRadius: '4px', textAlign: 'center', fontSize: '1rem', fontWeight: 700 }}>
+              {row.scores.map((score, i) => {
+                const style = getHeatStyle(score);
+                return (
+                  <td key={i} style={{ textAlign: 'center' }}>
+                    <div className="heatmap-cell-badge" style={{ background: style.bg, color: style.text, border: 1px solid  }}>
+                      {score === 0 ? '-' : score + '%'}
+                    </div>
+                  </td>
+                );
+              })}
+              <td style={{ textAlign: 'center', borderLeft: '1px dashed #e2e8f0' }}>
+                  <div className="heatmap-cell-badge" style={{ background: '#f8fafc', color: '#0f172a', border: '1px solid #cbd5e1', fontSize: '1rem' }}>
                     {row.avg}%
                   </div>
               </td>
@@ -151,17 +148,19 @@ const SiteHealthHeatmap = () => {
           ))}
         </tbody>
         <tfoot>
-          <tr>
-            <td style={{ padding: '16px 12px', fontWeight: 700, color: '#0f172a', fontSize: '1rem' }}>GLOBAL AVG</td>
+          <tr style={{ background: '#f8fafc' }}>
+            <td className="heatmap-sticky-col" style={{ padding: '16px 12px', fontWeight: 800, color: '#0f172a', fontSize: '0.95rem', borderTop: '2px solid #cbd5e1', borderBottom: 'none' }}>GLOBAL METRICS</td>
             {ucAvgs.map((avg, i) => (
-                <td key={i} style={{ padding: '16px 6px' }}>
-                  <div style={{ color: '#475569', textAlign: 'center', fontSize: '0.95rem', fontWeight: 700 }}>
+                <td key={i} style={{ padding: '16px 12px', textAlign: 'center', borderTop: '2px solid #cbd5e1', borderBottom: 'none' }}>
+                  <div style={{ color: '#334155', fontSize: '1rem', fontWeight: 800 }}>
                     {avg}%
                   </div>
                 </td>
             ))}
-            <td style={{ padding: '16px 6px', textAlign: 'center', fontWeight: 800, color: '#2563eb', fontSize: '1.1rem' }}>
-              {Math.round(ucAvgs.reduce((a,b)=>a+b,0)/ucAvgs.length)}%
+            <td style={{ padding: '16px 12px', textAlign: 'center', borderTop: '2px solid #cbd5e1', borderLeft: '1px dashed #e2e8f0', borderBottom: 'none' }}>
+              <div className="heatmap-cell-badge" style={{ background: '#2563eb', color: 'white', border: 'none', fontSize: '1.05rem', padding: '8px 16px', boxShadow: '0 4px 6px -1px rgba(37, 99, 235, 0.2)' }}>
+                {Math.round(ucAvgs.reduce((a,b)=>a+b,0)/ucAvgs.length)}%
+              </div>
             </td>
           </tr>
         </tfoot>
