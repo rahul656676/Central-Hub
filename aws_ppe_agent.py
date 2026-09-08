@@ -1,4 +1,5 @@
 import cv2
+import base64
 import time
 import requests
 import datetime
@@ -83,6 +84,11 @@ while cap.isOpened():
             cv2.imwrite(filename, frame)
             print(f"[!] ALERT: No Helmet detected! Confidence: {highest_conf:.2f}. Snapshot saved to {filename}")
             
+            # Convert snapshot to base64 data URL so dashboard can display it directly
+            with open(filename, "rb") as img_file:
+                b64_data = base64.b64encode(img_file.read()).decode("utf-8")
+            snapshot_data_url = f"data:image/jpeg;base64,{b64_data}"
+            
             # Prepare API Payload
             payload = {
                 "timestamp": timestamp_str,
@@ -94,7 +100,7 @@ while cap.isOpened():
                 "description": "No Helmet Detected",
                 "confidence": highest_conf,
                 "bbox": json.dumps(best_bbox),
-                "snapshot_url": PUBLIC_URL + "/snapshots/" + os.path.basename(filename)
+                "snapshot_url": snapshot_data_url
             }
             
             headers = {
