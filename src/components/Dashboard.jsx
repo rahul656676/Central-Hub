@@ -402,19 +402,16 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
             </div>
             
             {/* Command Center Layout */}
-            <div className="card full-width-card split-card" style={{ marginTop: '24px' }}>
-              
-              {/* Left Side: Camera Matrix */}
-              <div className="split-card-left" style={{ flex: 2 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <h3 style={{ margin: 0 }}>Global Site Health & Compliance</h3>
-                  <span style={{ fontSize: '1.1rem', background: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>GLOBAL AVG HEALTH: 78%</span>
+                          <div className="card full-width-card" style={{ marginTop: '24px', overflowX: 'auto', padding: '24px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+                  <h3 style={{ margin: 0, fontSize: '1.4rem' }}>Global Site Health Heatmap</h3>
+                  <span style={{ fontSize: '1rem', background: '#dcfce7', color: '#166534', padding: '8px 16px', borderRadius: '6px', fontWeight: 700 }}>GLOBAL AVG HEALTH: 78%</span>
                 </div>
-                <div style={{ marginTop: "0px" }}><SiteHealthHeatmap /></div>
+                <div style={{ marginTop: "0px", width: "100%", overflowX: "auto" }}><SiteHealthHeatmap /></div>
               </div>
-
-              {/* Right Side: Universal Event Feed */}
-              <div className="split-card-right" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+  
+              {/* Universal Event Feed */}
+              <div className="card full-width-card" style={{ marginTop: '24px', display: 'flex', flexDirection: 'column' }}>
                 <h3 style={{ marginBottom: '16px', marginTop: 0 }}>Universal Event Ticker</h3>
                 <div style={{ flex: 1, overflowY: 'auto', maxHeight: '380px', paddingRight: '8px' }}>
                   
@@ -453,7 +450,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                       <div style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginTop: '2px' }}>All 42 nodes responding</div>
                       <div style={{ fontSize: '1.1rem', color: 'var(--text-muted)', marginTop: '4px' }}>15 mins ago</div>
                     </div>
-                  </div>
+                  
 
                 </div>
               </div>
