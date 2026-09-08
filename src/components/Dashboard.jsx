@@ -133,7 +133,7 @@ const SiteHealthHeatmap = () => {
                 const style = getHeatStyle(score);
                 return (
                   <td key={i} style={{ textAlign: 'center' }}>
-                    <div className="heatmap-cell-badge" style={{ background: style.bg, color: style.text, border: 1px solid  }}>
+                    <div className="heatmap-cell-badge" style={{ background: style.bg, color: style.text, border: '1px solid ' + style.border }}>
                       {score === 0 ? '-' : score + '%'}
                     </div>
                   </td>
