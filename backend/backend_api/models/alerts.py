@@ -1,9 +1,9 @@
-from sqlalchemy import Column, String, ForeignKey, Boolean, DateTime, BigInteger, Float
+from sqlalchemy import Column, String, ForeignKey, Boolean, DateTime, Integer, Float
 from models.base import Base
 
 class Alert(Base):
     __tablename__ = "alerts"
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     site_id = Column(String)
     camera_id = Column(String)
     usecase = Column(String)
