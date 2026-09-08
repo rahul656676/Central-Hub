@@ -410,36 +410,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                   <h3 style={{ margin: 0 }}>Global Site Health & Compliance</h3>
                   <span style={{ fontSize: '0.75rem', background: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>GLOBAL AVG HEALTH: 78%</span>
                 </div>
-                <div className="data-grid camera-matrix" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '12px', marginTop: 0 }}>
-                  
-                  {[
-                      { name: 'Premix', useCases: 9, compliance: 98, status: 'Online' },
-                      { name: 'Impala', useCases: 5, compliance: 100, status: 'Online' },
-                      { name: 'Lugoba', useCases: 9, compliance: 92, status: 'Warning' },
-                      { name: 'Container Depot', useCases: 3, compliance: 100, status: 'Online' },
-                      { name: 'Lake Steel', useCases: 4, compliance: 0, status: 'Offline' },
-                      { name: 'AILL 1 & 2', useCases: 4, compliance: 100, status: 'Online' },
-                      { name: 'Fuel Depot', useCases: 7, compliance: 95, status: 'Online' },
-                      { name: 'Pipe & Cylinder', useCases: 3, compliance: 88, status: 'Warning' },
-                      { name: 'Lake Aviation', useCases: 2, compliance: 100, status: 'Online' },
-                      { name: 'Lake Trans', useCases: 6, compliance: 91, status: 'Warning' },
-                      { name: 'Building Solution', useCases: 4, compliance: 100, status: 'Online' },
-                      { name: 'Kings Apartment', useCases: 5, compliance: 96, status: 'Online' },
-                      { name: 'Showroom', useCases: 2, compliance: 100, status: 'Online' }
-                    ].map(site => (
-                    <div key={site.name} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--card-border)', borderRadius: '8px', padding: '12px 16px', background: 'white', borderLeft: `4px solid ${site.status === 'Online' ? 'var(--success)' : site.status === 'Warning' ? 'var(--warning)' : 'var(--danger)'}` }}>
-                        <div>
-                          <h4 style={{ margin: 0, fontSize: '0.9rem', color: 'var(--text-primary)' }}>{site.name}</h4>
-                          <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)' }}>{site.useCases} Use Cases Active</span>
-                        </div>
-                        <div style={{ textAlign: 'right' }}>
-                          <div style={{ fontSize: '1.1rem', fontWeight: 700, color: site.compliance < 50 ? 'var(--danger)' : site.compliance < 95 ? 'var(--warning)' : 'var(--success)' }}>{site.compliance}%</div>
-                          <span style={{ fontSize: '0.65rem', fontWeight: 600, padding: '2px 6px', borderRadius: '4px', background: site.status === 'Online' ? '#dcfce7' : site.status === 'Warning' ? '#fef08a' : '#fee2e2', color: site.status === 'Online' ? '#166534' : site.status === 'Warning' ? '#854d0e' : '#991b1b' }}>{site.status.toUpperCase()}</span>
-                        </div>
-                      </div>
-                  ))}
-
-                </div>
+                <div style={{ marginTop: "0px" }}><SiteHealthHeatmap /></div>
               </div>
 
               {/* Right Side: Universal Event Feed */}
