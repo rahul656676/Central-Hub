@@ -411,7 +411,22 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                   <span style={{ fontSize: '0.75rem', background: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>GLOBAL AVG HEALTH: 78%</span>
                 </div>
                 <div style={{ marginTop: "0px" }}><SiteHealthHeatmap /></div>
-                </div>
+                
+
+              {/* Right Side: Universal Event Feed */}
+              <div className="split-card-right" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+                <h3 style={{ marginBottom: '16px', marginTop: 0 }}>Universal Event Ticker</h3>
+                <div style={{ flex: 1, overflowY: 'auto', maxHeight: '380px', paddingRight: '8px' }}>
+                  
+                  {/* Event Item */}
+                  <div style={{ padding: '12px', borderBottom: '1px solid var(--card-border)', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--danger)', marginTop: '6px' }}></div>
+                    <div>
+                      <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>Intrusion Detected</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Perimeter Fence North - Human</div>
+                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>Just now</div>
+                    </div>
+                  </div>
                   
                   <div style={{ padding: '12px', borderBottom: '1px solid var(--card-border)', display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                     <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--warning)', marginTop: '6px' }}></div>
