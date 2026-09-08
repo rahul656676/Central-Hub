@@ -116,34 +116,34 @@ const SiteHealthHeatmap = () => {
 
   return (
     <div style={{ overflowX: 'auto', width: '100%', paddingBottom: '8px' }}>
-      <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 4px', minWidth: '800px' }}>
+      <table style={{ width: '100%', borderCollapse: 'separate', borderSpacing: '0 4px', minWidth: '1000px' }}>
         <thead>
           <tr>
-            <th style={{ padding: '8px', textAlign: 'left', color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase' }}>Location</th>
+            <th style={{ padding: '16px 12px', textAlign: 'left', color: '#64748b', fontSize: '1.1rem', textTransform: 'uppercase' }}>Location</th>
             {usecases.map(uc => (
-              <th key={uc} style={{ padding: '8px', textAlign: 'center', color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase' }}>{uc}</th>
+              <th key={uc} style={{ padding: '16px 12px', textAlign: 'center', color: '#64748b', fontSize: '1.1rem', textTransform: 'uppercase' }}>{uc}</th>
             ))}
-            <th style={{ padding: '8px', textAlign: 'center', color: '#0f172a', fontSize: '0.75rem', fontWeight: 800 }}>AVG</th>
+            <th style={{ padding: '16px 12px', textAlign: 'center', color: '#0f172a', fontSize: '1.1rem', fontWeight: 800 }}>AVG</th>
           </tr>
         </thead>
         <tbody>
           {data.map(row => (
             <tr key={row.name}>
-              <td style={{ padding: '8px', fontWeight: 600, color: '#0f172a', fontSize: '0.85rem', background: '#f8fafc', borderRadius: '4px 0 0 4px' }}>
+              <td style={{ padding: '16px 12px', fontWeight: 600, color: '#0f172a', fontSize: '1rem', background: '#f8fafc', borderRadius: '4px 0 0 4px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: row.avg === 0 ? '#cbd5e1' : row.avg >= 90 ? '#22c55e' : row.avg >= 80 ? '#f59e0b' : '#ef4444' }}></div>
                   {row.name}
                 </div>
               </td>
               {row.scores.map((score, i) => (
-                <td key={i} style={{ padding: '2px', background: '#f8fafc' }}>
-                  <div style={{ background: getHeatColor(score), color: getTextColor(score), padding: '6px 4px', borderRadius: '4px', textAlign: 'center', fontSize: '0.8rem', fontWeight: 600 }}>
+                <td key={i} style={{ padding: '6px', background: '#f8fafc' }}>
+                  <div style={{ background: getHeatColor(score), color: getTextColor(score), padding: '16px 12px', borderRadius: '4px', textAlign: 'center', fontSize: '0.95rem', fontWeight: 600 }}>
                     {score === 0 ? '-' : score + '%'}
                   </div>
                 </td>
               ))}
-              <td style={{ padding: '2px', background: '#f8fafc', borderRadius: '0 4px 4px 0' }}>
-                  <div style={{ background: '#e2e8f0', color: '#0f172a', padding: '6px 4px', borderRadius: '4px', textAlign: 'center', fontSize: '0.85rem', fontWeight: 700 }}>
+              <td style={{ padding: '6px', background: '#f8fafc', borderRadius: '0 4px 4px 0' }}>
+                  <div style={{ background: '#e2e8f0', color: '#0f172a', padding: '16px 12px', borderRadius: '4px', textAlign: 'center', fontSize: '1rem', fontWeight: 700 }}>
                     {row.avg}%
                   </div>
               </td>
@@ -152,15 +152,15 @@ const SiteHealthHeatmap = () => {
         </tbody>
         <tfoot>
           <tr>
-            <td style={{ padding: '12px 8px', fontWeight: 700, color: '#0f172a', fontSize: '0.85rem' }}>GLOBAL AVG</td>
+            <td style={{ padding: '16px 12px', fontWeight: 700, color: '#0f172a', fontSize: '1rem' }}>GLOBAL AVG</td>
             {ucAvgs.map((avg, i) => (
-                <td key={i} style={{ padding: '12px 2px' }}>
-                  <div style={{ color: '#475569', textAlign: 'center', fontSize: '0.8rem', fontWeight: 700 }}>
+                <td key={i} style={{ padding: '16px 6px' }}>
+                  <div style={{ color: '#475569', textAlign: 'center', fontSize: '0.95rem', fontWeight: 700 }}>
                     {avg}%
                   </div>
                 </td>
             ))}
-            <td style={{ padding: '12px 2px', textAlign: 'center', fontWeight: 800, color: '#2563eb', fontSize: '0.9rem' }}>
+            <td style={{ padding: '16px 6px', textAlign: 'center', fontWeight: 800, color: '#2563eb', fontSize: '1.1rem' }}>
               {Math.round(ucAvgs.reduce((a,b)=>a+b,0)/ucAvgs.length)}%
             </td>
           </tr>
@@ -200,7 +200,7 @@ const IncidentDrawer = ({ incident, onClose }) => {
           {/* Main Image Placeholder */}
           <div className="drawer-image-placeholder" style={{ padding: 0 }}>
             <img src={getDrawerImage()} alt="Incident Snapshot" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', bottom: 12, left: 12, background: 'rgba(0,0,0,0.7)', color: 'white', padding: '4px 10px', borderRadius: '4px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
+            <div style={{ position: 'absolute', bottom: 12, left: 12, background: 'rgba(0,0,0,0.7)', color: 'white', padding: '4px 10px', borderRadius: '4px', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span className="status-dot alert" style={{ margin: 0 }}></span> Live Feed Captured
             </div>
           </div>
@@ -402,19 +402,15 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
             </div>
             
             {/* Command Center Layout */}
-            <div className="card full-width-card split-card" style={{ marginTop: '24px' }}>
-              
-              {/* Left Side: Camera Matrix */}
-              <div className="split-card-left" style={{ flex: 2 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                  <h3 style={{ margin: 0 }}>Global Site Health & Compliance</h3>
-                  <span style={{ fontSize: '0.75rem', background: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>GLOBAL AVG HEALTH: 78%</span>
+                          <div className="card full-width-card" style={{ marginTop: '24px', overflow: 'hidden' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
+                  <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-primary)' }}>Global Site Health & Compliance Heatmap</h3>
+                  <span style={{ fontSize: '0.95rem', background: '#dcfce7', color: '#166534', padding: '8px 16px', borderRadius: '6px', fontWeight: 700, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>GLOBAL NETWORK HEALTH: 78%</span>
                 </div>
-                <div style={{ marginTop: "0px" }}><SiteHealthHeatmap /></div>
+                <SiteHealthHeatmap />
               </div>
-
-              {/* Right Side: Universal Event Feed */}
-              <div className="split-card-right" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+              
+              <div className="card full-width-card" style={{ marginTop: '24px' }}>
                 <h3 style={{ marginBottom: '16px', marginTop: 0 }}>Universal Event Ticker</h3>
                 <div style={{ flex: 1, overflowY: 'auto', maxHeight: '380px', paddingRight: '8px' }}>
                   
@@ -423,8 +419,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                     <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--danger)', marginTop: '6px' }}></div>
                     <div>
                       <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>Intrusion Detected</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Perimeter Fence North - Human</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>Just now</div>
+                      <div style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Perimeter Fence North - Human</div>
+                      <div style={{ fontSize: '1.1rem', color: 'var(--text-muted)', marginTop: '4px' }}>Just now</div>
                     </div>
                   </div>
                   
@@ -432,8 +428,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                     <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--warning)', marginTop: '6px' }}></div>
                     <div>
                       <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>PPE Violation: No Helmet</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Assembly Area - Zone B</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>2 mins ago</div>
+                      <div style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Assembly Area - Zone B</div>
+                      <div style={{ fontSize: '1.1rem', color: 'var(--text-muted)', marginTop: '4px' }}>2 mins ago</div>
                     </div>
                   </div>
 
@@ -441,8 +437,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                     <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--success)', marginTop: '6px' }}></div>
                     <div>
                       <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>ANPR: Authorized Vehicle</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Plate: T 123 ABC - Main Gate</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>5 mins ago</div>
+                      <div style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginTop: '2px' }}>Plate: T 123 ABC - Main Gate</div>
+                      <div style={{ fontSize: '1.1rem', color: 'var(--text-muted)', marginTop: '4px' }}>5 mins ago</div>
                     </div>
                   </div>
 
@@ -450,8 +446,8 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                     <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--success)', marginTop: '6px' }}></div>
                     <div>
                       <div style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-primary)' }}>System Sync Complete</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '2px' }}>All 42 nodes responding</div>
-                      <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '4px' }}>15 mins ago</div>
+                      <div style={{ fontSize: '1.1rem', color: 'var(--text-secondary)', marginTop: '2px' }}>All 42 nodes responding</div>
+                      <div style={{ fontSize: '1.1rem', color: 'var(--text-muted)', marginTop: '4px' }}>15 mins ago</div>
                     </div>
                   </div>
 
@@ -931,7 +927,7 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                   <Flame size={20} color="#f59e0b" />
                 </div>
                 <div style={{ background: '#0f172a', height: '140px', borderRadius: '8px', marginBottom: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#ef4444', position: 'relative', overflow: 'hidden' }}>
-                  <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(239, 68, 68, 0.9)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '0.75rem', zIndex: 2, fontWeight: 'bold' }}>HEAT SPOT</div><img src="/cam9.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(100%) hue-rotate(300deg) saturate(500%) contrast(150%)' }} />
+                  <div style={{ position: 'absolute', top: 8, right: 8, background: 'rgba(239, 68, 68, 0.9)', color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '1.1rem', zIndex: 2, fontWeight: 'bold' }}>HEAT SPOT</div><img src="/cam9.png" alt="" style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'sepia(100%) hue-rotate(300deg) saturate(500%) contrast(150%)' }} />
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                   <span>Current Temp:</span>
