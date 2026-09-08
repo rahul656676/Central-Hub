@@ -11,7 +11,9 @@ class AlertSchema(BaseModel):
     alert_type: str
     severity: str
     description: str
-    bbox: Optional[List[int]] = None
+    snapshot_url: Optional[str] = None
+    confidence: Optional[float] = None
+    bbox: Optional[str] = None
     
     class Config:
         orm_mode = True
