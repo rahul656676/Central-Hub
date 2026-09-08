@@ -14,6 +14,8 @@ from ultralytics import YOLO
 MODEL_PATH = "ppe_rebuilt.pt"
 VIDEO_SOURCE = "test.mp4" # or rtsp stream
 API_ENDPOINT = "http://127.0.0.1:10000/alerts/"
+# Set this to your Cloudflare tunnel URL (without trailing slash)
+PUBLIC_URL = os.environ.get("PUBLIC_URL", "http://127.0.0.1:10000")
 try:
     EDGE_TOKEN = os.environ["EDGE_TOKEN"]
 except KeyError:
@@ -92,9 +94,7 @@ while cap.isOpened():
                 "description": "No Helmet Detected",
                 "confidence": highest_conf,
                 "bbox": json.dumps(best_bbox),
-                # Note: In production, upload the image to S3 and pass the S3 URL here.
-                # For now, we will pass a placeholder or relative path that the dashboard can identify.
-                "snapshot_url": "s3://toplens-aws-bucket/" + filename 
+                "snapshot_url": PUBLIC_URL + "/snapshots/" + os.path.basename(filename)
             }
             
             headers = {
