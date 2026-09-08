@@ -29,7 +29,7 @@ const Sidebar = ({ isOpen, activeSolution, setActiveSolution, closeSidebar }) =>
     <aside className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
       <div className="sidebar-header">
         <Activity size={28} className="icon" />
-        <span>Central Hub</span>
+        <span>Toplens</span>
       </div>
       
       <nav className="sidebar-nav">
