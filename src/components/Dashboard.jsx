@@ -532,28 +532,30 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
                     </tr>
                   </thead>
                   <tbody>
-                    <tr onClick={() => handleRowClick({ type: 'PPE Violation', time: 'Today, 10:42 AM', camera: 'Gate 4 - Loading', location: 'Gate 4 - Loading', violation: 'No Helmet', worker: 'EMP-0892', supervisor: 'Rajesh K.' })}>
-                      <td><Thumbnail icon={User} color="#ef4444" /></td>
-                      <td>Today, 10:42 AM</td>
-                      <td>Gate 4 - Loading</td>
-                      <td><span style={{ color: '#ef4444', fontWeight: 600 }}>No Helmet</span></td>
-                      <td><button type="button" className="action-btn" onClick={(e) => e.stopPropagation()}>Alert Supervisor</button></td>
-                    </tr>
-                    <tr onClick={() => handleRowClick({ type: 'PPE Violation', time: 'Today, 09:15 AM', camera: 'Area B - Processing', location: 'Area B - Processing', violation: 'No Vest', worker: 'EMP-1044', supervisor: 'Amit S.' })}>
-                      <td><Thumbnail icon={User} color="#f59e0b" /></td>
-                      <td>Today, 09:15 AM</td>
-                      <td>Area B - Processing</td>
-                      <td><span style={{ color: '#f59e0b', fontWeight: 600 }}>No Vest</span></td>
-                      <td><button type="button" className="action-btn" onClick={(e) => e.stopPropagation()}>Alert Supervisor</button></td>
-                    </tr>
-                    <tr onClick={() => handleRowClick({ type: 'PPE Violation', time: 'Yesterday, 16:30 PM', camera: 'Gate 1 - Main', location: 'Gate 1 - Main', violation: 'No Helmet', worker: 'EMP-0211', supervisor: 'Sanjay M.' })}>
-                      <td><Thumbnail icon={User} color="#ef4444" /></td>
-                      <td>Yesterday, 16:30 PM</td>
-                      <td>Gate 1 - Main</td>
-                      <td><span style={{ color: '#ef4444', fontWeight: 600 }}>No Helmet</span></td>
-                      <td><button type="button" className="action-btn" style={{ background: '#e2e8f0' }} onClick={(e) => e.stopPropagation()}>Resolved</button></td>
-                    </tr>
-                  </tbody>
+                      {alertsLoading ? (
+                        <tr><td colSpan="5" style={{ textAlign: 'center', padding: '24px' }}>Loading live streams...</td></tr>
+                      ) : backendAlerts && backendAlerts.filter(a => a.usecase === 'PPE Monitoring').length > 0 ? (
+                        backendAlerts.filter(a => a.usecase === 'PPE Monitoring').map((alert) => (
+                          <tr key={alert.id} onClick={() => handleRowClick({ 
+                            type: alert.alert_type, 
+                            time: new Date(alert.timestamp).toLocaleTimeString(), 
+                            camera: alert.camera_id, 
+                            location: alert.site_id, 
+                            violation: alert.description,
+                            snapshot_url: alert.snapshot_url,
+                            confidence: alert.confidence
+                          })}>
+                            <td><Thumbnail icon={User} color={alert.severity === 'high' ? '#ef4444' : '#f59e0b'} /></td>
+                            <td>{new Date(alert.timestamp).toLocaleTimeString()}</td>
+                            <td>{alert.camera_id}</td>
+                            <td><span style={{ color: alert.severity === 'high' ? '#ef4444' : '#f59e0b', fontWeight: 600 }}>{alert.description}</span></td>
+                            <td><button type="button" className="action-btn" onClick={(e) => e.stopPropagation()}>Alert Supervisor</button></td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr><td colSpan="5" style={{ textAlign: 'center', padding: '24px', color: 'var(--text-muted)' }}>No live violations detected.</td></tr>
+                      )}
+                    </tbody>
                 </table>
               </div>
             </div>
