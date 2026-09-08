@@ -1,5 +1,5 @@
 from sqlalchemy import Column, String, ForeignKey, Integer, Boolean
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import JSON as JSONB
 from models.base import Base
 
 class AlertRule(Base):
