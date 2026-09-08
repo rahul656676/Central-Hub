@@ -199,7 +199,7 @@ const IncidentDrawer = ({ incident, onClose }) => {
         <div className="drawer-body">
           {/* Main Image Placeholder */}
           <div className="drawer-image-placeholder" style={{ padding: 0 }}>
-            <img src={getDrawerImage()} alt="Incident Snapshot" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <img src={(incident.snapshot_url && !incident.snapshot_url.startsWith("s3://")) ? incident.snapshot_url : getDrawerImage()} alt="Incident Snapshot" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
             <div style={{ position: 'absolute', bottom: 12, left: 12, background: 'rgba(0,0,0,0.7)', color: 'white', padding: '4px 10px', borderRadius: '4px', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <span className="status-dot alert" style={{ margin: 0 }}></span> Live Feed Captured
             </div>
