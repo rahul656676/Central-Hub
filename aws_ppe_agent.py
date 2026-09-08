@@ -13,7 +13,7 @@ from ultralytics import YOLO
 # Configuration
 MODEL_PATH = "ppe_rebuilt.pt"
 VIDEO_SOURCE = "test.mp4" # or rtsp stream
-API_ENDPOINT = "https://central-hub-tih5.onrender.com/alerts/"
+API_ENDPOINT = "http://127.0.0.1:10000/alerts/"
 try:
     EDGE_TOKEN = os.environ["EDGE_TOKEN"]
 except KeyError:
