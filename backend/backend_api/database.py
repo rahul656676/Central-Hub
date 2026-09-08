@@ -3,9 +3,12 @@ from sqlalchemy.orm import sessionmaker
 from models.base import Base
 import os
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:password@localhost:5432/centralhub")
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./central_hub.db")
 
-engine = create_engine(DATABASE_URL)
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
+else:
+    engine = create_engine(DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 def get_db():
