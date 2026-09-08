@@ -402,16 +402,19 @@ const Dashboard = ({ activeSolution, activeLocationFilter, searchQuery, userName
             </div>
             
             {/* Command Center Layout */}
-            <div className="card full-width-card" style={{ marginTop: '24px', overflow: 'hidden' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
-                  <h3 style={{ margin: 0, fontSize: '1.25rem', color: 'var(--text-primary)' }}>Global Site Health & Compliance Heatmap</h3>
-                  <span style={{ fontSize: '0.95rem', background: '#dcfce7', color: '#166534', padding: '8px 16px', borderRadius: '6px', fontWeight: 700, boxShadow: '0 1px 2px rgba(0,0,0,0.05)' }}>GLOBAL NETWORK HEALTH: 78%</span>
-                </div>
-                <SiteHealthHeatmap />
-              </div>
+            <div className="card full-width-card split-card" style={{ marginTop: '24px' }}>
               
-              <div className="card full-width-card" style={{ marginTop: '24px' }}>
-                
+              {/* Left Side: Camera Matrix */}
+              <div className="split-card-left" style={{ flex: 2 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                  <h3 style={{ margin: 0 }}>Global Site Health & Compliance</h3>
+                  <span style={{ fontSize: '1.1rem', background: '#dcfce7', color: '#166534', padding: '4px 8px', borderRadius: '4px', fontWeight: 600 }}>GLOBAL AVG HEALTH: 78%</span>
+                </div>
+                <div style={{ marginTop: "0px" }}><SiteHealthHeatmap /></div>
+              </div>
+
+              {/* Right Side: Universal Event Feed */}
+              <div className="split-card-right" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
                 <h3 style={{ marginBottom: '16px', marginTop: 0 }}>Universal Event Ticker</h3>
                 <div style={{ flex: 1, overflowY: 'auto', maxHeight: '380px', paddingRight: '8px' }}>
                   
