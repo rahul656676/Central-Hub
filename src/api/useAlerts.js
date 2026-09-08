@@ -15,7 +15,7 @@ export function useAlerts(siteId = null) {
           url += '?site_id=' + mappedSiteId;
         }
         
-        const response = await fetch(url, { headers: { 'Bypass-Tunnel-Reminder': 'true' } });
+        const response = await fetch(url);
         if (response.ok) {
           const data = await response.json();
           setAlerts(data);
