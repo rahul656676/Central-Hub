@@ -1,3 +1,4 @@
+import os
 from fastapi import APIRouter, Depends, HTTPException, Security
 from fastapi.security import APIKeyHeader
 from sqlalchemy.orm import Session
@@ -12,8 +13,12 @@ router = APIRouter(prefix="/alerts", tags=["Alerts"])
 api_key_header = APIKeyHeader(name="X-Edge-Token", auto_error=False)
 
 def verify_edge_token(api_key: str = Security(api_key_header)):
-    # In production, check against DB or env variables
-    if api_key != "aws_edge_super_secret_token_2026":
+    expected_token = os.environ.get("EDGE_TOKEN")
+    if not expected_token:
+        # Fail securely if the server environment is not configured correctly
+        raise HTTPException(status_code=500, detail="Server misconfiguration: EDGE_TOKEN environment variable is not set")
+        
+    if not api_key or api_key != expected_token:
         raise HTTPException(status_code=403, detail="Invalid Edge Token")
     return api_key
 

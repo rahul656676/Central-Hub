@@ -14,7 +14,11 @@ from ultralytics import YOLO
 MODEL_PATH = "ppe_rebuilt.pt"
 VIDEO_SOURCE = "test.mp4" # or rtsp stream
 API_ENDPOINT = "https://central-hub-tih5.onrender.com/alerts/"
-EDGE_TOKEN = "aws_edge_super_secret_token_2026"
+try:
+    EDGE_TOKEN = os.environ["EDGE_TOKEN"]
+except KeyError:
+    print("[!] ERROR: EDGE_TOKEN environment variable is not set. Please set it before running this script.")
+    exit(1)
 SITE_ID = "Premix"
 CAMERA_ID = "Gate 4 - Loading"
 CONFIDENCE_THRESHOLD = 0.50
