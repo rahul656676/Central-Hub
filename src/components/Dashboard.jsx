@@ -5,6 +5,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer 
 } from 'recharts';
 import { useAlerts } from '../api/useAlerts';
+import { API_BASE_URL } from '../config/apiBase';
 
 // Simple deterministic hash for consistent random numbers per location
 const hashCode = (str) => {
