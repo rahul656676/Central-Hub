@@ -138,7 +138,7 @@ const SiteHealthHeatmap = () => {
               {row.scores.map((score, i) => (
                 <td key={i} style={{ padding: '2px', background: '#f8fafc' }}>
                   <div style={{ background: getHeatColor(score), color: getTextColor(score), padding: '6px 4px', borderRadius: '4px', textAlign: 'center', fontSize: '0.8rem', fontWeight: 600 }}>
-                    {score === 0 ? '-' : score + '%'}%}
+                    {score === 0 ? '-' : score + '%'}
                   </div>
                 </td>
               ))}
