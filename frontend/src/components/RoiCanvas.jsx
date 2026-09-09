@@ -123,10 +123,10 @@ const RoiCanvas = ({ imageUrl, onSave, initialPoints = [] }) => {
               const idx = i / 2;
               return (
                 <Circle
-                  key={point- + idx}
+                  key={'point-' + idx}
                   x={points[i]}
                   y={points[i + 1]}
-                  radius={6}
+                  radius={8}
                   fill="white"
                   stroke="#10b981"
                   strokeWidth={2}
