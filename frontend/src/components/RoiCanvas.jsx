@@ -1,185 +1,242 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Stage, Layer, Image as KonvaImage, Line, Circle } from 'react-konva';
-import useImage from 'use-image';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 
-const RoiCanvas = ({ imageUrl, onSave, initialPoints = [] }) => {
-  const [image] = useImage(imageUrl || 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=800&q=80', 'anonymous');
-  
-  // Default Pentagon
-  const defaultPentagon = [
-    300, 50,  // top
-    450, 150, // right top
-    400, 350, // right bottom
-    200, 350, // left bottom
-    150, 150  // left top
-  ];
-  
-  const [points, setPoints] = useState(initialPoints.length > 0 ? initialPoints : defaultPentagon);
-  const [isFinished, setIsFinished] = useState(true); // Default pentagon is finished
-  const [containerSize, setContainerSize] = useState({ width: 600, height: 400 });
+const RoiCanvas = ({ onSave }) => {
+  const canvasRef = useRef(null);
   const containerRef = useRef(null);
+  const imgRef = useRef(null);
+  const [pts, setPts] = useState([]);
+  const [finished, setFinished] = useState(false);
+  const [dragging, setDragging] = useState(null); // index of point being dragged
+  const [canvasSize, setCanvasSize] = useState({ w: 600, h: 380 });
+  const imgLoaded = useRef(false);
 
-  useEffect(() => {
-    const observer = new ResizeObserver(entries => {
-      if (entries[0]) {
-        setContainerSize({
-          width: entries[0].contentRect.width,
-          height: 400
-        });
-      }
+  const IMG_URL = 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=800&q=80';
+
+  // Default pentagon centered on canvas
+  const makeDefaultPentagon = useCallback((w, h) => {
+    const cx = w / 2, cy = h / 2, r = Math.min(w, h) * 0.3;
+    return Array.from({ length: 5 }, (_, i) => {
+      const angle = (i * 2 * Math.PI) / 5 - Math.PI / 2;
+      return { x: Math.round(cx + r * Math.cos(angle)), y: Math.round(cy + r * Math.sin(angle)) };
     });
-    
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
-    }
-    
-    // Fire initial save to register default pentagon in parent state
-    setTimeout(() => handleSaveClick(true), 500);
-    
-    return () => observer.disconnect();
   }, []);
 
-  const handleStageClick = (e) => {
-    if (isFinished) return;
-    const stage = e.target.getStage();
-    const point = stage.getPointerPosition();
-    setPoints([...points, point.x, point.y]);
+  // Draw everything onto canvas
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw background image
+    if (imgRef.current && imgLoaded.current) {
+      ctx.drawImage(imgRef.current, 0, 0, canvas.width, canvas.height);
+    } else {
+      ctx.fillStyle = '#0f172a';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+
+    if (pts.length === 0) return;
+
+    // Draw filled polygon if finished
+    ctx.beginPath();
+    ctx.moveTo(pts[0].x, pts[0].y);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+    if (finished) ctx.closePath();
+
+    if (finished) {
+      ctx.fillStyle = 'rgba(16, 185, 129, 0.25)';
+      ctx.fill();
+    }
+    ctx.strokeStyle = '#10b981';
+    ctx.lineWidth = 2.5;
+    ctx.stroke();
+
+    // Draw closing line preview when not finished
+    if (!finished && pts.length >= 2) {
+      ctx.setLineDash([5, 5]);
+      ctx.beginPath();
+      ctx.moveTo(pts[pts.length - 1].x, pts[pts.length - 1].y);
+      ctx.lineTo(pts[0].x, pts[0].y);
+      ctx.strokeStyle = 'rgba(16,185,129,0.4)';
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+
+    // Draw vertex circles
+    pts.forEach((p, i) => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 7, 0, Math.PI * 2);
+      ctx.fillStyle = i === 0 ? '#f59e0b' : 'white';
+      ctx.fill();
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+  }, [pts, finished]);
+
+  // Load image
+  useEffect(() => {
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => { imgLoaded.current = true; imgRef.current = img; draw(); };
+    img.src = IMG_URL;
+    imgRef.current = img;
+  }, []);
+
+  // Resize canvas to container
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(entries => {
+      const w = entries[0].contentRect.width;
+      const h = 380;
+      setCanvasSize({ w, h });
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Set default pentagon after first resize
+  useEffect(() => {
+    if (pts.length === 0 && canvasSize.w > 0) {
+      const defaultPts = makeDefaultPentagon(canvasSize.w, canvasSize.h);
+      setPts(defaultPts);
+      setFinished(true);
+    }
+  }, [canvasSize]);
+
+  // Redraw whenever state changes
+  useEffect(() => { draw(); }, [draw]);
+
+  // Update canvas dimensions
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.width = canvasSize.w;
+      canvas.height = canvasSize.h;
+      draw();
+    }
+  }, [canvasSize, draw]);
+
+  // Notify parent whenever pts change and polygon is finished
+  useEffect(() => {
+    if (finished && pts.length >= 3 && onSave) {
+      onSave({
+        points: pts.map(p => [p.x, p.y]),
+        frame_width: canvasSize.w,
+        frame_height: canvasSize.h
+      });
+    }
+  }, [pts, finished]);
+
+  // --- Helpers ---
+  const getPos = (e) => {
+    const rect = canvasRef.current.getBoundingClientRect();
+    const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+    const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+    return { x: clientX - rect.left, y: clientY - rect.top };
   };
 
-  const handlePointDrag = (index, e) => {
-    const newPoints = [...points];
-    newPoints[index * 2] = e.target.x();
-    newPoints[index * 2 + 1] = e.target.y();
-    setPoints(newPoints);
-    handleSaveClick(true); // auto-update parent while dragging
+  const nearPoint = (pos) => {
+    for (let i = 0; i < pts.length; i++) {
+      const dx = pts[i].x - pos.x, dy = pts[i].y - pos.y;
+      if (Math.sqrt(dx * dx + dy * dy) < 12) return i;
+    }
+    return null;
+  };
+
+  const handleMouseDown = (e) => {
+    e.preventDefault();
+    const pos = getPos(e);
+
+    // If finished — check if near a point for drag
+    if (finished) {
+      const idx = nearPoint(pos);
+      if (idx !== null) setDragging(idx);
+      return;
+    }
+
+    // Not finished — add point; close if near first point
+    if (pts.length >= 3) {
+      const dx = pts[0].x - pos.x, dy = pts[0].y - pos.y;
+      if (Math.sqrt(dx * dx + dy * dy) < 12) {
+        setFinished(true);
+        return;
+      }
+    }
+    setPts(prev => [...prev, pos]);
+  };
+
+  const handleMouseMove = (e) => {
+    if (dragging === null) return;
+    e.preventDefault();
+    const pos = getPos(e);
+    setPts(prev => prev.map((p, i) => i === dragging ? pos : p));
+  };
+
+  const handleMouseUp = () => setDragging(null);
+
+  const handleReset = () => {
+    setPts([]);
+    setFinished(false);
   };
 
   const handleFinish = () => {
-    if (points.length >= 6) { // at least 3 points
-      setIsFinished(true);
-      // Automatically pass data to parent when finished drawing
-      handleSaveClick(true);
-    }
+    if (pts.length >= 3) setFinished(true);
   };
 
-  const handleReset = () => {
-    setPoints([]);
-    setIsFinished(false);
-  };
-
-  const handleSaveClick = (silent = false) => {
-    if (onSave && points.length >= 6) {
-      const exportPoints = [];
-      for (let i = 0; i < points.length; i += 2) {
-        exportPoints.push([points[i], points[i + 1]]);
-      }
-      
-      const payload = {
-        points: exportPoints,
-        frame_width: containerSize.width,
-        frame_height: containerSize.height
-      };
-      
-      onSave(payload);
-      if (!silent) {
-        console.log("Exported ROI Payload:", payload);
-      }
-    }
-  };
+  const cursorStyle = finished ? (dragging !== null ? 'grabbing' : 'grab') : 'crosshair';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%' }}>
-      <div 
-        ref={containerRef} 
-        style={{ width: '100%', height: '400px', background: '#0f172a', borderRadius: '8px', overflow: 'hidden', position: 'relative' }}
-      >
-        <Stage 
-          width={containerSize.width} 
-          height={containerSize.height} 
-          onClick={handleStageClick}
-        >
-          <Layer>
-            {image && (
-              <KonvaImage 
-                image={image} 
-                width={containerSize.width} 
-                height={containerSize.height} 
-                opacity={0.8}
-              />
-            )}
-            
-            {points.length > 0 && (
-              <Line
-                points={isFinished ? [...points, points[0], points[1]] : points}
-                stroke="#10b981"
-                strokeWidth={3}
-                fill={isFinished ? 'rgba(16, 185, 129, 0.3)' : 'transparent'}
-                closed={isFinished}
-              />
-            )}
-
-            {points.map((p, i) => {
-              if (i % 2 !== 0) return null;
-              const idx = i / 2;
-              return (
-                <Circle
-                  key={'point-' + idx}
-                  x={points[i]}
-                  y={points[i + 1]}
-                  radius={8}
-                  fill="white"
-                  stroke="#10b981"
-                  strokeWidth={2}
-                  draggable={isFinished}
-                  onDragMove={(e) => handlePointDrag(idx, e)}
-                  onMouseEnter={(e) => {
-                    const container = e.target.getStage().container();
-                    container.style.cursor = isFinished ? 'move' : 'pointer';
-                  }}
-                  onMouseLeave={(e) => {
-                    const container = e.target.getStage().container();
-                    container.style.cursor = 'default';
-                  }}
-                />
-              );
-            })}
-          </Layer>
-        </Stage>
-        
-        {!isFinished && points.length > 0 && (
-          <div style={{ position: 'absolute', top: 16, left: 16, background: 'rgba(0,0,0,0.7)', color: 'white', padding: '8px 12px', borderRadius: '4px', fontSize: '0.875rem' }}>
-            Click to add points. At least 3 points required.
-          </div>
-        )}
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', width: '100%' }}>
+      {/* Instruction banner */}
+      <div style={{ background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '6px', padding: '8px 12px', fontSize: '0.8rem', color: '#166534' }}>
+        {finished
+          ? '✅ ROI locked. Drag white dots to adjust the region. Click "Redraw" to start over.'
+          : pts.length === 0
+            ? '👆 Click on the image to start drawing. Yellow dot = first point.'
+            : `📍 ${pts.length} point(s) added. Click near the yellow dot to close, or click "Finish".`
+        }
       </div>
 
-      <div style={{ display: 'flex', gap: '12px' }}>
-        {!isFinished ? (
-          <button 
-            type="button" 
-            onClick={handleFinish} 
-            disabled={points.length < 6}
-            style={{ padding: '8px 16px', background: 'var(--accent-blue)', color: 'white', border: 'none', borderRadius: '6px', cursor: points.length < 6 ? 'not-allowed' : 'pointer', opacity: points.length < 6 ? 0.5 : 1 }}
+      {/* Canvas */}
+      <div ref={containerRef} style={{ width: '100%', borderRadius: '8px', overflow: 'hidden', border: '2px solid #10b981' }}>
+        <canvas
+          ref={canvasRef}
+          width={canvasSize.w}
+          height={canvasSize.h}
+          style={{ display: 'block', cursor: cursorStyle, userSelect: 'none' }}
+          onMouseDown={handleMouseDown}
+          onMouseMove={handleMouseMove}
+          onMouseUp={handleMouseUp}
+          onMouseLeave={handleMouseUp}
+          onTouchStart={handleMouseDown}
+          onTouchMove={handleMouseMove}
+          onTouchEnd={handleMouseUp}
+        />
+      </div>
+
+      {/* Controls */}
+      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+        {!finished ? (
+          <button
+            type="button"
+            onClick={handleFinish}
+            disabled={pts.length < 3}
+            style={{ padding: '8px 16px', background: pts.length < 3 ? '#9ca3af' : '#2563eb', color: 'white', border: 'none', borderRadius: '6px', cursor: pts.length < 3 ? 'not-allowed' : 'pointer', fontWeight: 500 }}
           >
-            Finish Polygon
+            ✅ Finish Polygon ({pts.length} pts)
           </button>
         ) : (
-          <button 
-            type="button" 
+          <button
+            type="button"
             onClick={handleReset}
-            style={{ padding: '8px 16px', background: '#f8fafc', color: 'var(--text-primary)', border: '1px solid var(--card-border)', borderRadius: '6px', cursor: 'pointer' }}
+            style={{ padding: '8px 16px', background: '#f1f5f9', color: '#374151', border: '1px solid #e2e8f0', borderRadius: '6px', cursor: 'pointer', fontWeight: 500 }}
           >
-            Redraw Region
+            🔄 Redraw Region
           </button>
         )}
-        <button 
-          type="button" 
-          onClick={handleSaveClick}
-          disabled={!isFinished}
-          style={{ padding: '8px 16px', background: 'var(--success)', color: 'white', border: 'none', borderRadius: '6px', cursor: !isFinished ? 'not-allowed' : 'pointer', opacity: !isFinished ? 0.5 : 1 }}
-        >
-          Save Region of Interest
-        </button>
       </div>
     </div>
   );
